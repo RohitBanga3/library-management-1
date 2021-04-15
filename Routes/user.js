@@ -24,4 +24,8 @@ router.get('/searchBook',(req,res) => {
     var keyword = req.query.keyword;
 })
 
+router.put('/changePassword',(req,res) => {
+    checkLoginUser(req,res);
+})
+
 module.exports = router;

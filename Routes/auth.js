@@ -11,7 +11,7 @@ function checkLoginLibrarian(req,res){
 
 function checkLoginUser(req,res){
     if(req.session.userKey == keys.userKey){
-        res.render('../libararian/');
+        res.render('../user/');
     }
     return;
 }
@@ -24,6 +24,7 @@ studentLogin = async function(req,res){
 
     db.query(query,[email], async function(error,results,fields) {
         if(error){
+            console.log(error);
             res.send({
                 "code":400,
                 "failed":"error occured"
@@ -31,8 +32,9 @@ studentLogin = async function(req,res){
         }else{
             if(results.length > 0){
                 const comparision = await bcrypt.compare(password,results[0].password)
+                console.log(comparision);
                 if(comparision){
-                    req.session.cookieKey = keys.userKey;
+                    req.session.userKey = keys.userKey;
                     req.session.user_id = user_id;
                     res.redirect('../studenthome')
                 }
@@ -62,6 +64,7 @@ librarianLogin = async function(req,res){
 
     db.query(query,[email], async function(error,results,fields) {
         if(error){
+            console.log(error);
             res.send({
                 "code":400,
                 "failed":"error occured"
@@ -69,10 +72,11 @@ librarianLogin = async function(req,res){
         }else{
             if(results.length > 0){
                 const comparision = await bcrypt.compare(password,results[0].password)
+                console.log(comparision,password,results[0].password);
                 if(comparision){
-                    req.session.cookieKey = keys.librariankey;
+                    req.session.librarianKey = keys.librariankey;
                     req.session.librarian_id = results.librarian_id;
-                    res.redirect('../librarianhome');
+                    res.redirect('/librarian');
                 }
                 else{
                     res.send({
@@ -92,14 +96,22 @@ librarianLogin = async function(req,res){
     })
 }
 
-router.get('/studentlogin',(req,res) => {
-    checkLogin(req,res);
+router.get('/userlogin',(req,res) => {
+    checkLoginUser(req,res);
+    res.render('login.ejs');
+})
+
+router.get('/librarianlogin',(req,res) => {
+    checkLoginLibrarian(req,res);
+    res.render('login.ejs');
+})
+
+router.post('/userlogin',(req,res) => {
     studentLogin(req,res);
 })
 
-router.get('/librarianlogin',(req,res) =>{
-    checkLoginLibrarian(req,res);
+router.post('/librarianlogin',(req,res) =>{
     librarianLogin(req,res);
 })
 
-modules.exports = router;
+module.exports = router;

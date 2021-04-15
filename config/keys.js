@@ -1,5 +1,6 @@
 module.exports = {
     cookieKey :'indorelibrary',
     userKey    : 'indorelibrayuser',
-    librariankey : 'indorelibrarian'
+    librariankey : 'indorelibrarian',
+    saltRounds : 4
 }
