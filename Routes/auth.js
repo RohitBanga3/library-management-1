@@ -3,13 +3,15 @@ const bcrypt = require('bcrypt');
 var router = require('express').Router();
 const keys = require('../config/keys');
 
-
-function checkLogin(req,res){
-    if(req.session.userKey == keys.userKey){
-        res.redirect('../studentHome');
-    }
+function checkLoginLibrarian(req,res){
     if(req.session.librariankey == keys.librariankey){
-        res.redirect('../librarianHome');
+        res.redirect('../librarian/');
+    }
+}
+
+function checkLoginUser(req,res){
+    if(req.session.userKey == keys.userKey){
+        res.render('../libararian/');
     }
     return;
 }
@@ -96,7 +98,7 @@ router.get('/studentlogin',(req,res) => {
 })
 
 router.get('/librarianlogin',(req,res) =>{
-    checkLogin(req,res);
+    checkLoginLibrarian(req,res);
     librarianLogin(req,res);
 })
 

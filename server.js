@@ -12,6 +12,7 @@ var port = process.env.PORT || 3000;
 var indexRouter = require('./Routes/index');
 var userRouter = require('./Routes/user');
 var authRouter = require('./Routes/auth');
+var librarianRouter = require('./Routes/librarian');
 
 const app = express();
 
@@ -40,7 +41,9 @@ app.use(logger('dev'));
 app.listen(port, () => console.log(`listening tp PORT ${port}...`));
 
 app.use('/',indexRouter);
-
+app.use('/auth',authRouter);
 app.use('/user',userRouter);
+app.use('/librarian',librarianRouter);
+
 
 module.exports = app;
