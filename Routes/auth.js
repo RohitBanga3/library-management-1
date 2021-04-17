@@ -16,7 +16,7 @@ function checkLoginUser(req,res){
     return;
 }
 
-studentLogin = async function(req,res){
+userLogin = async function(req,res){
     var email = req.body.email;
     var password = req.body.password;
 
@@ -32,11 +32,11 @@ studentLogin = async function(req,res){
         }else{
             if(results.length > 0){
                 const comparision = await bcrypt.compare(password,results[0].password)
-                console.log(comparision);
+                console.log(comparision,password,results[0].password);
                 if(comparision){
                     req.session.userKey = keys.userKey;
-                    req.session.user_id = user_id;
-                    res.redirect('../studenthome')
+                    req.session.user_id = results[0].user_id;
+                    res.render('userHome.ejs');
                 }
                 else{
                     res.send({
@@ -64,7 +64,7 @@ librarianLogin = async function(req,res){
 
     db.query(query,[email], async function(error,results,fields) {
         if(error){
-            console.log(error);
+            //console.log(error);
             res.send({
                 "code":400,
                 "failed":"error occured"
@@ -72,10 +72,10 @@ librarianLogin = async function(req,res){
         }else{
             if(results.length > 0){
                 const comparision = await bcrypt.compare(password,results[0].password)
-                console.log(comparision,password,results[0].password);
+                
                 if(comparision){
                     req.session.librarianKey = keys.librariankey;
-                    req.session.librarian_id = results.librarian_id;
+                    req.session.librarian_id = results[0].librarian_id;
                     res.redirect('/librarian');
                 }
                 else{
@@ -107,11 +107,16 @@ router.get('/librarianlogin',(req,res) => {
 })
 
 router.post('/userlogin',(req,res) => {
-    studentLogin(req,res);
+    userLogin(req,res);
 })
 
 router.post('/librarianlogin',(req,res) =>{
     librarianLogin(req,res);
+})
+
+router.get('/logout',(req,res)=> {
+    req.session = null;
+    res.render('home.ejs');
 })
 
 module.exports = router;
