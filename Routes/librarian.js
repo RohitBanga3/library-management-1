@@ -2,6 +2,7 @@ const router = require('express').Router();
 const db = require('../services/db');
 const bcrypt = require('bcrypt');
 const keys = require('../config/keys');
+const { post } = require('./auth');
 
 function checkLoginLibrarian(req,res){
     if(req.session.librarianKey != keys.librariankey){
@@ -20,26 +21,23 @@ async function addUser(req,res){
     const password = req.body.password;
     const encryptedPassword = await bcrypt.hash(password,keys.saltRounds);
 
+    let address = req.body.address ? req.body.address != undefined : null;
+
+    let phone_number = req.body.phone_number ? req.body.phone_number!=undefined : null;
+
     var user = {
         "email":req.body.email,
         "password":encryptedPassword,
         "name":req.body.name,
         "user_id" :req.body.user_id,
-        "phone_number":req.body.phone_number
+        "phone_number":phone_number,
+        "address":address,
+        student:req.body.student
     }
     var query = 'INSERT INTO user SET ?';
-    db.query(query,user,(error,results,fields) => {
-        if(error){
-            res.send({
-                "code":400,
-                "failed":"error occured"
-            })
-        } else{
-            res.send({
-                "code":200,
-                "success":"registration successfull"
-            })
-        }
+    db.query(query,user,(err,results,fields) => {
+        checkError(err,res);
+        res.render('librarianHome.ejs')
     })
 }
 
@@ -73,17 +71,17 @@ router.post('/addBook',(req,res) => {
 router.delete('/deleteBook',(req,res) => {
     checkLoginLibrarian(req,res);
 
-    var query = 'DELETE FROM `book WHERE `book_id` = '+ req.body.book_id;
+    var query = 'DELETE FROM `book` WHERE `book_id` = '+ req.body.book_id;
     db.query(query,(err,result,fileds) => {
         checkError(err,res);
-        res.redirect('/librarian/');
+        res.render('librarianHome.ejs');
     });
 })
 
 router.put('/issueBook',(req,res) => {
     checkLoginLibrarian(req,res);
 
-    let query = 'SELECT SUM(`fine_amount`) AS total_fine FROM `fines` WHERE `user_id` = '+req.body.user_id+' GROUP BY user_id';
+    let query = 'SELECT SUM(`fine_amount`) AS total_fine FROM `fine` WHERE `user_id` = '+req.body.user_id+' GROUP BY user_id';
     let fine_amount,status,overdue;
     db.query(query,(err,result) =>{
         checkError(err,res);
@@ -139,25 +137,78 @@ router.put('/issueBook',(req,res) => {
 router.put('/returnBook',(req,res) => {
     checkLoginLibrarian(req,res);
 
-    let query = 'UPDATE book SET ? WHERE book_id = '+req.body.book_id;
+    let query = 'SELECT DATEDIFF(borrowed_date,CURRENT_DATE()) AS days,borrowed_id FROM book WHERE book_id = '+req.body.book_id;
 
-    let post = {
-        borrowed_date : null,
-        borrowed_id : null
+    let days = 0,user_id;
+    db.query(query,(err,result) => {
+        checkError(err,res);
+        if(result[0].days > 10){
+            days = result[0].days -10;
+        }
+        user_id = result[0].borrowed_id;
+    })
+
+    let post;
+
+    if(days>0){
+        query = 'INSERT INTO fine SET ?';
+        post = {
+            user_id : user_id,
+            fine_amount : 2*days,
+            book_id : req.body.user_id
+        }
+
+        db.query(query,(err,result) => {
+            checkError(err,res);
+        })
     }
+
+    query = 'UPDATE book SET ? WHERE book_id = '+req.body.book_id;
+
+    post = {
+        borrowed_date : null,
+        borrowed_id : null,
+        status : 'Available'
+    }
+
+    db.query(query,post,(err,result,fields) => {
+        checkError(err,res);
+        res.redirect('/librarian/');
+    })
+
 
 });
 
-router.put('/clearfine',(req,res) => {
+router.delete('/clearfine',(req,res) => {
     checkLoginLibrarian(req,res);
+
+    let query = 'DELETE FROM fine WHERE user_id = '+ req.body.user_id;
+
+    db.query(query,(err,result) => {
+        checkError(err,res);
+        res.render('librarianHome.ejs');
+    })
+
 })
 
 router.post('/addUser',(req,res) => {
     checkLoginLibrarian(req,res);
+    addUser(req,res)
+    .then(() => {
+        return;
+    })
+    .catch((error) => {
+        console.log(error);
+    })
 })
 
 router.put('/changePassword',(req,res) => {
     checkLoginLibrarian(req,res);
+
+    let old_password = req.body.old_password;
+    let new_password = req.body.new_password;
+
+    let query = 'SELECT password FROM librarian WHERE librarian_id = '+req.session.librarian_id
 })
 
 module.exports = router;
