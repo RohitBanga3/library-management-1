@@ -83,8 +83,8 @@ router.delete('/deleteBook',(req,res) => {
 router.put('/issueBook',(req,res) => {
     checkLoginLibrarian(req,res);
 
-    var query = 'SELECT SUM(`fine_amount`) AS total_fine FROM `fines` WHERE `user_id` = '+req.body.user_id+' GROUP BY user_id';
-    var fine_amount;
+    let query = 'SELECT SUM(`fine_amount`) AS total_fine FROM `fines` WHERE `user_id` = '+req.body.user_id+' GROUP BY user_id';
+    let fine_amount,status,overdue;
     db.query(query,(err,result) =>{
         checkError(err,res);
         if(result.length != 0){
@@ -94,18 +94,12 @@ router.put('/issueBook',(req,res) => {
             fine_amount = 0;
         }
     })
-
-    if(fine_amount > 20){
-        res.redirect('/librarian/')
-    }
     
     query = 'SELECT status FROM book WHERE book_id = '+req.body.book_id;
 
     db.query(query,(err,result) => {
         checkError(err,res);
-        if(result[0].status == 'on loan'){
-            res.redirect('/librarian/');
-        }
+        status = result[0].status;
     });
 
     query = 'SELECT user.user_id FROM (book INNER JOIN user ON user.user_id = book.borrowed_id) WHERE user.user_id = '+req.body.user_id +' AND DATEDIFF(borrowed_date,CURRENT_DATE()) > 10';
@@ -114,28 +108,43 @@ router.put('/issueBook',(req,res) => {
 
     db.query(query,(err,result) => {
         checkError(err,res);
-        console.log(result);
-        res.redirect('/librarian')
+        overdue = result.length > 0;
     })
 
     query = 'UPDATE `book` SET ? WHERE book_id = '+req.body.book_id;
 
-    /*var post = {
+    var post = {
         borrowed_date:new Date(),
         borrowed_id:req.body.user_id,
         status: "on loan"
     }
 
-    db.query(query,post,(err,result,fields) => {
-        checkError(err,res);
+    if(fine_amount > 20){
         res.redirect('/librarian');
-    });*/
+    }
+    else if(status == 'on loan'){
+        res.redirect('/librarian');
+    }
+    else if(overdue){
+        res.redirect('/librarian');
+    }
+    else{
+        db.query(query,post,(err,result,fields) => {
+            checkError(err,res);
+            res.redirect('/librarian');
+        });
+    }
 })
 
 router.put('/returnBook',(req,res) => {
     checkLoginLibrarian(req,res);
 
-    var query = 'UPDATE book'
+    let query = 'UPDATE book SET ? WHERE book_id = '+req.body.book_id;
+
+    let post = {
+        borrowed_date : null,
+        borrowed_id : null
+    }
 
 });
 
