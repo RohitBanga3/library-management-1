@@ -2,7 +2,6 @@ const router = require('express').Router();
 const db = require('../services/db');
 const bcrypt = require('bcrypt');
 const keys = require('../config/keys');
-const { post } = require('./auth');
 
 function checkLoginLibrarian(req,res){
     if(req.session.librarianKey != keys.librariankey){
@@ -13,7 +12,10 @@ function checkLoginLibrarian(req,res){
 function checkError(error,res){
     if(error){
         console.log({success:false,message:'database error',err:error});
-        res.render('error.ejs');
+        res.render('error.ejs',{
+            message:'database error',
+            error:error
+        });
     }
 }
 
@@ -233,7 +235,10 @@ router.post('/addUser',(req,res) => {
     })
     .catch((error) => {
         //console.log(error);
-        res.render('error.ejs');
+        res.render('error.ejs',{
+            message:'database error',
+            error:error
+        });
     })
 })
 
@@ -267,20 +272,24 @@ router.put('/changePassword',(req,res) => {
                         password : encryptedPassword
                     }
             
-                // console.log(new_password);
-            
                     db.query(query,post,(err,result) => {
                         checkError(err,res);
                         res.render('librarianHome.ejs');
                     })
                 })
                 .catch((error) => {
-                    res.render('error.ejs');
+                    res.render('error.ejs',{
+                        message:"internal error",
+                        error:error
+                    });
                 })
             }
         })
         .catch((error) => {
-            res.render('error.ejs');
+            res.render('error.ejs',{
+                message:"internal error",
+                error:error
+            });
         })
     });
       
