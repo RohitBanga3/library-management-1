@@ -12,8 +12,8 @@ function checkLoginLibrarian(req,res){
 
 function checkError(error,res){
     if(error){
-        //console.log({success:false,message:'database error',err:error});
-        res.send({success:false,message:'database error',err:error});
+        console.log({success:false,message:'database error',err:error});
+        res.render('error.ejs');
     }
 }
 
@@ -64,7 +64,7 @@ router.post('/addBook',(req,res) => {
 
     db.query(query,post,(err,result) => {
         checkError(err,res);
-        res.redirect('/librarian/');
+        res.render('librarianHome.ejs');
     });
 })
 
@@ -93,11 +93,14 @@ router.put('/issueBook',(req,res) => {
         }
     })
     
-    query = 'SELECT status FROM book WHERE book_id = '+req.body.book_id;
+    query = 'SELECT status,holder_id FROM book WHERE book_id = '+req.body.book_id;
+
+    let holder;
 
     db.query(query,(err,result) => {
         checkError(err,res);
         status = result[0].status;
+        holder = result[0].holder_id;
     });
 
     query = 'SELECT user.user_id FROM (book INNER JOIN user ON user.user_id = book.borrowed_id) WHERE user.user_id = '+req.body.user_id +' AND DATEDIFF(borrowed_date,CURRENT_DATE()) > 10';
@@ -114,13 +117,18 @@ router.put('/issueBook',(req,res) => {
     var post = {
         borrowed_date:new Date(),
         borrowed_id:req.body.user_id,
-        status: "on loan"
+        status: "on loan",
+        holder_id : null,
+        hold_date : null
     }
 
     if(fine_amount > 20){
         res.redirect('/librarian');
     }
     else if(status == 'on loan'){
+        res.redirect('/librarian');
+    }
+    else if(status == 'on hold' && holder != req.body.user_id){
         res.redirect('/librarian');
     }
     else if(overdue){
@@ -137,7 +145,7 @@ router.put('/issueBook',(req,res) => {
 router.put('/returnBook',(req,res) => {
     checkLoginLibrarian(req,res);
 
-    let query = 'SELECT DATEDIFF(borrowed_date,CURRENT_DATE()) AS days,borrowed_id FROM book WHERE book_id = '+req.body.book_id;
+    let query = 'SELECT DATEDIFF(borrowed_date,CURRENT_DATE()) AS days,borrowed_id,holder_id FROM book WHERE book_id = '+req.body.book_id;
 
     let days = 0,user_id;
     db.query(query,(err,result) => {
@@ -165,10 +173,19 @@ router.put('/returnBook',(req,res) => {
 
     query = 'UPDATE book SET ? WHERE book_id = '+req.body.book_id;
 
+    let stat;
+
+    if(holder_id == null){
+        stat = 'Available';
+    }
+    else{
+        stat = 'on hold';
+    }
+
     post = {
         borrowed_date : null,
         borrowed_id : null,
-        status : 'Available'
+        status : stat
     }
 
     db.query(query,post,(err,result,fields) => {
@@ -178,6 +195,23 @@ router.put('/returnBook',(req,res) => {
 
 
 });
+
+router.get('/checkfine',(req,res) => {
+    checkLoginLibrarian(req,res);
+
+    let query = 'SELECT SUM(`fine_amount`) AS total_fine FROM `fine` WHERE `user_id` = '+req.body.user_id+' GROUP BY user_id';
+
+    let fine_amount = 0;
+
+    db.query(query,(error,result) => {
+        checkError(error,res);
+        if(result.length > 0){
+            fine_amount = result[0].total_fine;
+        }
+        
+        res.render('librarianHome.ejs');
+    })
+})
 
 router.delete('/clearfine',(req,res) => {
     checkLoginLibrarian(req,res);
@@ -216,38 +250,40 @@ router.put('/changePassword',(req,res) => {
     db.query(query,(err,result) => {
         checkError(err,res);
         old_password_db = result[0].password;
-    });
-    bcrypt.compare(old_password,old_password_db).
-    then((same_old) => {
-        if(!same_old){
-            res.render('librarianHome.ejs')
-        }
-        else{
-            let encryptedPassword;
-            query = 'UPDATE librarian SET ?';
-    
-            bcrypt.hash(new_password,keys.saltRounds)
-            .then((password) => {
-                encryptedPassword = password;
-                let post = {
-                    password : encryptedPassword
-                }
+
+        bcrypt.compare(old_password,old_password_db)
+        .then((same_old) => {
+            if(!same_old){
+                res.render('librarianHome.ejs')
+            }
+            else{
+                let encryptedPassword;
+                query = 'UPDATE librarian SET ?';
         
-               // console.log(new_password);
-        
-                db.query(query,post,(err,result) => {
-                    checkError(err,res);
-                    res.render('librarianHome.ejs');
+                bcrypt.hash(new_password,keys.saltRounds)
+                .then((password) => {
+                    encryptedPassword = password;
+                    let post = {
+                        password : encryptedPassword
+                    }
+            
+                // console.log(new_password);
+            
+                    db.query(query,post,(err,result) => {
+                        checkError(err,res);
+                        res.render('librarianHome.ejs');
+                    })
                 })
-            })
-            .catch((error) => {
-                res.render('error.ejs');
-            })
-        }
-    })
-    .catch((error) => {
-        res.render('error.ejs');
-    })
+                .catch((error) => {
+                    res.render('error.ejs');
+                })
+            }
+        })
+        .catch((error) => {
+            res.render('error.ejs');
+        })
+    });
+    
     
 })
 
