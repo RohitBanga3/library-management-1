@@ -55,6 +55,38 @@ router.get('/searchBook',(req,res) => {
     checkLoginUser(req,res);
     var criterion = req.query.criterion;
     var keyword = req.query.keyword;
+
+    console.log(criterion);
+    console.log(keyword);
+
+    if(criterion == 'name'){
+        
+        let query = "SELECT * FROM book WHERE title LIKE '%"+keyword+"%'";
+
+        db.query(query,(error,result) => {
+            checkError(error,res);
+            console.log(result);
+            res.render('userHome.ejs');
+        })
+    }
+    else if(criterion == 'ISBN'){
+        let query = "SELECT * FROM book WHERE ISBN LIKE '%"+keyword+"%'";
+
+        db.query(query,(error,result) => {
+            checkError(error,res);
+            console.log(result);
+            res.render('userHome.ejs');
+        })
+    }
+    else if(criterion == 'author'){
+        let query = "SELECT * FROM book WHERE EXISTS (SELECT author_id FROM author WHERE author.author_id = book.author_id AND author.name LIKE '%"+keyword+"%')";
+        
+        db.query(query,(error,result) => {
+            checkError(error,res);
+            console.log(result);
+            res.render('userHome.ejs');
+        })
+    }
 })
 
 router.put('/changePassword',(req,res) => {
