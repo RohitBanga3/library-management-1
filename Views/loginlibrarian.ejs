@@ -15,10 +15,10 @@
                 <form class="d-flex flex-column" action="./librarianlogin" method="post"> <!--need to write action-->
                     <input name="email" class="mt-2" type="text" id="email" placeholder="Enter User name"/>
                     <input name="password" class="mt-2" type="password" id="password" placeholder="Enter password" />
-                    <%if(error !=undefined) {%>
+                    <%if(locals.error !=undefined) {%>
                         <p style="color:red"><%=error%></p>
                     <%}%>
-                    <button onclick = "submitLogin()" class="btn btn-primary mt-3">Login As</button>
+                    <button onclick = "submitLogin()" class="btn btn-primary mt-3">Login</button>
                 </form>
             </div>
         </div>

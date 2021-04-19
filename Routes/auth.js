@@ -5,15 +5,18 @@ const keys = require('../config/keys');
 
 function checkLoginLibrarian(req,res){
     if(req.session.librariankey == keys.librariankey){
-        res.redirect('../librarian/');
+        res.render('librarianHome.ejs');
+        return true;
     }
+    return false;
 }
 
 function checkLoginUser(req,res){
     if(req.session.userKey == keys.userKey){
-        res.render('../user/');
+        res.render('userHome.ejs');
+        return true;
     }
-    return;
+    return false;
 }
 
 userLogin = async function(req,res){
@@ -94,13 +97,15 @@ librarianLogin = async function(req,res){
 }
 
 router.get('/userlogin',(req,res) => {
-    checkLoginUser(req,res);
-    res.render('loginUser.ejs');
+    if(!checkLoginUser(req,res)){
+        res.render('loginUser.ejs');
+    }
 })
 
 router.get('/librarianlogin',(req,res) => {
-    checkLoginLibrarian(req,res);
-    res.render('loginlibrarian.ejs');
+    if(!(checkLoginLibrarian(req,res))){
+        res.render('loginlibrarian.ejs');
+    }
 })
 
 router.post('/userlogin',(req,res) => {
