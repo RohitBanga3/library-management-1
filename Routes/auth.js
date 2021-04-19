@@ -4,7 +4,8 @@ var router = require('express').Router();
 const keys = require('../config/keys');
 
 function checkLoginLibrarian(req,res){
-    if(req.session.librariankey == keys.librariankey){
+    //console.log(req.session,req.session.librariankey,keys.librariankey);
+    if(req.session.librarianKey == keys.librariankey){
         res.render('librarianHome.ejs');
         return true;
     }
@@ -118,7 +119,7 @@ router.post('/librarianlogin',(req,res) =>{
 
 router.get('/logout',(req,res)=> {
     req.session = null;
-    res.render('home.ejs');
+    res.redirect('/');
 })
 
 module.exports = router;
