@@ -20,7 +20,41 @@ function checkError(error,res){
 
 router.get('/',(req,res) => {
     checkLoginUser(req,res);
-    res.render('userHome.ejs');
+
+    let issuedBooks,holdBooks,total_fine=0;
+
+    let query = 'SELECT * FROM book WHERE borrowed_id = '+req.session.user_id;
+
+    db.query(query,(error,result) => {
+        checkError(error,res);
+
+        issuedBooks = result;
+
+        let query = 'SELECT * FROM book WHERE holder_id = '+ req.session.user_id;
+
+        db.query(query,(error,result) => {
+            checkError(error,res);
+
+            holdBooks = result;
+
+            let query = 'SELCT SUM(fine_amount) AS total_fine FROM fine WHERE user_id ='+req.session.user_id+' GROUP BY user_id';
+
+            db.query(query,(error,result) => {
+                checkError(error,res);
+
+                if(result.length > 0){
+                    total_fine = result[0].total_fine;
+                }
+                res.render('userHome.ejs',{
+                    issuedBooks : issuedBooks,
+                    holdBooks : holdBooks,
+                    total_fine : total_fine
+                })
+            })
+        })
+    })
+
+    
 })
 
 router.put('/holdBook',(req,res) => {
@@ -33,22 +67,23 @@ router.put('/holdBook',(req,res) => {
     db.query(query,(error,results) => {
         checkError(error,res);
         on_hold = results.length > 0;
-    })
-    if(on_hold){
-        res.render('userHome.ejs');
-    }
-    else{
-        query = 'UPDATE book SET ?';
-        let post = {
-            holder_id : req.session.user_id,
-            hold_date : new Date()
-        }
 
-        db.query(query,post,(err,result) => {
-            checkError(err,res);
+        if(on_hold){
             res.render('userHome.ejs');
-        })
-    }
+        }
+        else{
+            query = 'UPDATE book SET ?';
+            let post = {
+                holder_id : req.session.user_id,
+                hold_date : new Date()
+            }
+    
+            db.query(query,post,(err,result) => {
+                checkError(err,res);
+                res.render('userHome.ejs');
+            })
+        }
+    })
 })
 
 router.get('/searchBook',(req,res) => {

@@ -25,9 +25,9 @@ userLogin = async function(req,res){
     db.query(query,[email], async function(error,results,fields) {
         if(error){
             console.log(error);
-            res.send({
-                "code":400,
-                "failed":"error occured"
+            res.render('error.ejs',{
+                message:'database error',
+                error:error
             })
         }else{
             if(results.length > 0){
@@ -39,18 +39,16 @@ userLogin = async function(req,res){
                     res.render('userHome.ejs');
                 }
                 else{
-                    res.send({
-                        "code":204,
-                        "success":"email and password not match"
+                    res.render('loginUser.ejs',{
+                        error:"check email or password"
                     })
                 }
 
             }
             else{
-                res.send({
-                    "code":206,
-                    "success":"email doesn't exist"
-                });
+                res.render('loginUser.ejs',{
+                    error:"check your email"
+                })
             }
         }
     })
@@ -65,9 +63,10 @@ librarianLogin = async function(req,res){
     db.query(query,[email], async function(error,results,fields) {
         if(error){
             //console.log(error);
-            res.send({
-                "code":400,
-                "failed":"error occured"
+
+            res.render('error.ejs',{
+                message:'database error',
+                error:error
             })
         }else{
             if(results.length > 0){
@@ -79,18 +78,16 @@ librarianLogin = async function(req,res){
                     res.redirect('/librarian');
                 }
                 else{
-                    res.send({
-                        "code":204,
-                        "success":"email and password not match"
+                    res.render('loginlibrarian.ejs',{
+                        error:"check email or password"
                     })
                 }
 
             }
             else{
-                res.send({
-                    "code":206,
-                    "success":"email doesn't exist"
-                });
+                res.render('loginlibrarian.ejs',{
+                    error:"check your email"
+                })
             }
         }
     })
@@ -98,12 +95,12 @@ librarianLogin = async function(req,res){
 
 router.get('/userlogin',(req,res) => {
     checkLoginUser(req,res);
-    res.render('login.ejs');
+    res.render('loginUser.ejs');
 })
 
 router.get('/librarianlogin',(req,res) => {
     checkLoginLibrarian(req,res);
-    res.render('login.ejs');
+    res.render('loginlibrarian.ejs');
 })
 
 router.post('/userlogin',(req,res) => {
