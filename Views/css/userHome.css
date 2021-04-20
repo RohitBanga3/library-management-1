@@ -46,3 +46,7 @@ body{
     }
     
 }
+
+.passivebackground{
+    background-color: gray;
+}

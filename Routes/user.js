@@ -23,14 +23,14 @@ router.get('/',(req,res) => {
     if(checkLoginUser(req,res)){
         let issuedBooks,holdBooks,total_fine=0;
 
-        let query = 'SELECT * FROM book WHERE borrowed_id = '+req.session.user_id;
+        let query = 'SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE borrowed_id = '+req.session.user_id;
 
         db.query(query,(error,result) => {
             checkError(error,res);
 
             issuedBooks = result;
 
-            let query = 'SELECT * FROM book WHERE holder_id = '+ req.session.user_id;
+            let query = 'SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE holder_id = '+ req.session.user_id;
 
             db.query(query,(error,result) => {
                 checkError(error,res);

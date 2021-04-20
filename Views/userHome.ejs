@@ -51,46 +51,33 @@
             <div class="issued">
                 <h2>Issued Books</h2>
                 <ul class="list-group">
-                    <li class="d-flex list-group-item bookItem">
-                        <img class="bookimage" src="#"/> 
-                        <div class="bookdetails">
-                            <h4>Title of the book</h4>
-                            <p>Authors of the book</p>
-                            <p>ISBN</p>
-                            <p>Book id</p>
-                            <p>Due date</p>
-                        </div>
-                    </li>
-                    <li class="d-flex list-group-item bookItem">
-                        <img class="bookimage" src="#"/> 
-                        <div class="bookdetails">
-                            <h4>Title of the book</h4>
-                            <p>Authors of the book</p>
-                            <p>ISBN</p>
-                            <p>Book id</p>
-                            <p>Due date</p>
-                        </div>
-                    </li>
-                    <li class="d-flex list-group-item bookItem">
-                        <img class="bookimage" src="#"/> 
-                        <div class="bookdetails">
-                            <h4>Title of the book</h4>
-                            <p>Authors of the book</p>
-                            <p>ISBN</p>
-                            <p>Book id</p>
-                            <p>Due date</p>
-                        </div>
-                    </li>
-                    <li class="d-flex list-group-item bookItem">
-                        <img class="bookimage" src="#"/> 
-                        <div class="bookdetails">
-                            <h4>Title of the book</h4>
-                            <p>Authors of the book</p>
-                            <p>ISBN</p>
-                            <p>Book id</p>
-                            <p>Due date</p>
-                        </div>
-                    </li>
+                    <%if(locals.issuedBooks.length==0){%>
+                        <h3>No books issued</h3>
+                    <%}else{%>
+                        <%for(let i=0;i<locals.issuedBooks.length;i++) { %>
+                            <li class="d-flex list-group-item bookItem">
+                                 <img class="bookimage" src="#"/> 
+                                 <div class="bookdetails">
+                                     <h4>Title: <%=locals.issuedBooks[i].title%></h4>
+                                     <p>Author: <%=locals.issuedBooks[i].name%></p>
+                                     <p>ISBN: <%=locals.issuedBooks[i].ISBN%></p>
+                                     <p>Book id <%=locals.issuedBooks[i].book_id%></p>
+                                     <%var dueDate = locals.issuedBooks[i].borrowed_date;
+                                     console.log(dueDate);
+                                     dueDate.setDate(dueDate.getDate()+10);
+                                     console.log(dueDate);
+                                     
+                                     var datestring = `${dueDate.getDate()} - ${dueDate.getMonth()+1} - ${dueDate.getFullYear()}`
+                                     %>
+                                     <p>Due date : <%=datestring%></p>
+                                 </div>
+                                 <%if(dueDate < new Date()){%>
+                                    <p>Over due</p>
+                                <%}%>
+                             </li>
+                         <%}%>
+                    <%}%>
+                    
                 </ul>
             </div>
         </div>
