@@ -306,30 +306,38 @@ router.get('/searchBook/',(req,res) => {
 
     if(criterion == 'name'){
         
-        let query = "SELECT * FROM book WHERE title LIKE '%"+keyword+"%'";
+        let query = "SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE title LIKE '%"+keyword+"%'";
 
         db.query(query,(error,result) => {
             checkError(error,res);
             console.log(result);
-            res.render('userHome.ejs');
+            res.render('booksearch.ejs',{
+                books:result,
+                librarian:true
+            });
         })
     }
     else if(criterion == 'ISBN'){
-        let query = "SELECT * FROM book WHERE ISBN LIKE '%"+keyword+"%'";
+        let query = "SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE ISBN LIKE '%"+keyword+"%'";
 
         db.query(query,(error,result) => {
             checkError(error,res);
             console.log(result);
-            res.render('userHome.ejs');
+            res.render('booksearch.ejs',{
+                books:result,
+                librarian : true
+            });
         })
     }
     else if(criterion == 'author'){
-        let query = "SELECT * FROM book WHERE EXISTS (SELECT author_id FROM author WHERE author.author_id = book.author_id AND author.name LIKE '%"+keyword+"%')";
+        let query = "SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE EXISTS (SELECT author_id FROM author WHERE author.author_id = book.author_id AND author.name LIKE '%"+keyword+"%')";
         
         db.query(query,(error,result) => {
             checkError(error,res);
             console.log(result);
-            res.render('userHome.ejs');
+            res.render('booksearch.ejs',{
+                books:result
+            });
         })
     }
 })

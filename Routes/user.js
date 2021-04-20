@@ -58,32 +58,37 @@ router.get('/',(req,res) => {
 })
 
 router.put('/holdBook',(req,res) => {
-    checkLoginUser(req,res);
+    if(checkLoginUser(req,res)){
+        console.log(req.body);
 
-    let query = 'SELECT holder_id FROM book WHERE book_id = '+req.body.book_id+ ' AND holder_id IS NOT NULL';
+        let query = 'SELECT holder_id FROM book WHERE book_id = '+req.body.book_id+ ' AND holder_id IS NOT NULL';
 
-    let on_hold;
+        let on_hold;
 
-    db.query(query,(error,results) => {
-        checkError(error,res);
-        on_hold = results.length > 0;
+        db.query(query,(error,results) => {
+            checkError(error,res);
+            on_hold = results.length > 0;
 
-        if(on_hold){
-            res.render('userHome.ejs');
-        }
-        else{
-            query = 'UPDATE book SET ?';
-            let post = {
-                holder_id : req.session.user_id,
-                hold_date : new Date()
+            if(on_hold){
+                res.redirect('/user/');
             }
+            else{
+                query = 'UPDATE book SET ? WHERE book_id = '+req.body.book_id;
+                let post = {
+                    holder_id : req.session.user_id,
+                    hold_date : new Date(),
+                    status : 'on hold'
+                }
+        
+                db.query(query,post,(err,result) => {
+                    checkError(err,res);
+                    res.redirect('/user/');
+                })
+            }
+        })
+    }
+
     
-            db.query(query,post,(err,result) => {
-                checkError(err,res);
-                res.render('userHome.ejs');
-            })
-        }
-    })
 })
 
 router.get('/searchBook',(req,res) => {

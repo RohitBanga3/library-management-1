@@ -25,10 +25,21 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Link</a>
-                  </li>
+                </li>
+                <li class="nav-item">
+                  <a class="btn btn-light" role="button" href="../auth/logout">Log out</a>
+                </li>
               </ul>
-              <a class="btn btn-light" role="button" href="../auth/logout">Log out</a>
             </div>
         </nav>
+        <form class="d-flex form-group searchBar justify-content-center mt-3 p-2" id="searchForm" action="./searchBook" method="get">
+          <select  id="searchCriterion" class="form-select" name="criterion" form="searchForm">
+              <option selected value="name">Book name</option>
+              <option value="ISBN">ISBN</option>
+              <option value="author">Author</option>
+          </select>
+          <input type="text" class="form-control" id="keyword" name="keyword" placeholder="Enter the keyword" />
+          <button class="btn btn-primary" type="submit">Search</button>
+      </form>
     </body>
 </html>

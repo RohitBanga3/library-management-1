@@ -5,11 +5,11 @@ const keys = require('../config/keys');
 
 function checkLoginLibrarian(req,res){
     //console.log(req.session,req.session.librariankey,keys.librariankey);
-    if(req.session.librarianKey == keys.librariankey){
+    if(req.session.librarianKey != keys.librariankey){
         res.render('librarianHome.ejs');
-        return true;
+        return false;
     }
-    return false;
+    return true;
 }
 
 function checkLoginUser(req,res){
@@ -105,8 +105,8 @@ router.get('/userlogin',(req,res) => {
 })
 
 router.get('/librarianlogin',(req,res) => {
-    if(!(checkLoginLibrarian(req,res))){
-        res.render('loginlibrarian.ejs');
+    if(checkLoginLibrarian(req,res)){
+        res.redirect('/librarian/');
     }
 })
 
