@@ -6,8 +6,9 @@ const bcrypt = require('bcrypt');
 function checkLoginUser(req,res){
     if(req.session.userKey != keys.userKey){
         res.render('../auth/logout');
+        return false;
     }
-    return;
+    return true;
 }
 
 function checkError(error,res){
@@ -19,42 +20,41 @@ function checkError(error,res){
 
 
 router.get('/',(req,res) => {
-    checkLoginUser(req,res);
+    if(checkLoginUser(req,res)){
+        let issuedBooks,holdBooks,total_fine=0;
 
-    let issuedBooks,holdBooks,total_fine=0;
-
-    let query = 'SELECT * FROM book WHERE borrowed_id = '+req.session.user_id;
-
-    db.query(query,(error,result) => {
-        checkError(error,res);
-
-        issuedBooks = result;
-
-        let query = 'SELECT * FROM book WHERE holder_id = '+ req.session.user_id;
+        let query = 'SELECT * FROM book WHERE borrowed_id = '+req.session.user_id;
 
         db.query(query,(error,result) => {
             checkError(error,res);
 
-            holdBooks = result;
+            issuedBooks = result;
 
-            let query = 'SELCT SUM(fine_amount) AS total_fine FROM fine WHERE user_id ='+req.session.user_id+' GROUP BY user_id';
+            let query = 'SELECT * FROM book WHERE holder_id = '+ req.session.user_id;
 
             db.query(query,(error,result) => {
                 checkError(error,res);
 
-                if(result.length > 0){
-                    total_fine = result[0].total_fine;
-                }
-                res.render('userHome.ejs',{
-                    issuedBooks : issuedBooks,
-                    holdBooks : holdBooks,
-                    total_fine : total_fine
+                holdBooks = result;
+
+                let query = 'SELECT SUM(fine_amount) AS total_fine FROM fine WHERE user_id ='+req.session.user_id+' GROUP BY user_id';
+
+                db.query(query,(error,result) => {
+                    checkError(error,res);
+
+                    if(result.length > 0){
+                        total_fine = result[0].total_fine;
+                    }
+                    res.render('userHome.ejs',{
+                        issuedBooks : issuedBooks,
+                        holdBooks : holdBooks,
+                        total_fine : total_fine
+                    })
                 })
             })
         })
-    })
-
-    
+    }
+       
 })
 
 router.put('/holdBook',(req,res) => {
@@ -96,30 +96,37 @@ router.get('/searchBook',(req,res) => {
 
     if(criterion == 'name'){
         
-        let query = "SELECT * FROM book WHERE title LIKE '%"+keyword+"%'";
+        let query = "SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE book.title LIKE '%"+keyword+"%'";
 
         db.query(query,(error,result) => {
             checkError(error,res);
             console.log(result);
-            res.render('userHome.ejs');
+
+            res.render('booksearch.ejs',{
+                books : result
+            });
         })
     }
     else if(criterion == 'ISBN'){
-        let query = "SELECT * FROM book WHERE ISBN LIKE '%"+keyword+"%'";
+        let query = "SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE book.ISBN LIKE '%"+keyword+"%'";
 
         db.query(query,(error,result) => {
             checkError(error,res);
             console.log(result);
-            res.render('userHome.ejs');
+            res.render('book.ejs',{
+                books:result
+            });
         })
     }
     else if(criterion == 'author'){
-        let query = "SELECT * FROM book WHERE EXISTS (SELECT author_id FROM author WHERE author.author_id = book.author_id AND author.name LIKE '%"+keyword+"%')";
+        let query = "SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE EXISTS (SELECT author_id FROM author WHERE author.author_id = book.author_id AND author.name LIKE '%"+keyword+"%')";
         
         db.query(query,(error,result) => {
             checkError(error,res);
             console.log(result);
-            res.render('userHome.ejs');
+            res.render('booksearch.ejs',{
+                books:result
+            });
         })
     }
 })

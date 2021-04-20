@@ -13,11 +13,11 @@ function checkLoginLibrarian(req,res){
 }
 
 function checkLoginUser(req,res){
-    if(req.session.userKey == keys.userKey){
-        res.render('userHome.ejs');
-        return true;
+    if(req.session.userKey != keys.userKey){
+        res.render('loginUser.ejs');
+        return false;
     }
-    return false;
+    return true;
 }
 
 userLogin = async function(req,res){
@@ -40,7 +40,7 @@ userLogin = async function(req,res){
                 if(comparision){
                     req.session.userKey = keys.userKey;
                     req.session.user_id = results[0].user_id;
-                    res.render('userHome.ejs');
+                    res.redirect('/user/');
                 }
                 else{
                     res.render('loginUser.ejs',{
@@ -98,8 +98,9 @@ librarianLogin = async function(req,res){
 }
 
 router.get('/userlogin',(req,res) => {
-    if(!checkLoginUser(req,res)){
-        res.render('loginUser.ejs');
+    console.log("lokesh")
+    if(checkLoginUser(req,res)){
+        res.redirect('/user/');
     }
 })
 

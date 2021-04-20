@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -25,20 +26,22 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Link</a>
-                  </li>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-light" role="button" href="../auth/logout">Log out</a>
+                </li>
               </ul>
-              <a class="btn btn-light" role="button" href="../auth/logout">Log out</button>
             </div>
         </nav>
-        <div class="d-flex form-group searchBar justify-content-center mt-3 p-2">
-            <select id="searchCriterion" class="form-select">
-                <option selected value="bookName">Book name</option>
+        <form class="d-flex form-group searchBar justify-content-center mt-3 p-2" id="searchForm" action="./searchBook" method="GET">
+            <select name="criterion" class="form-select" form="searchForm">
+                <option selected value="name">Book name</option>
                 <option value="ISBN">ISBN</option>
                 <option value="author">Author</option>
             </select>
-            <input type="text" class="form-control" id="keyword" placeholder="Enter the keyword" />
+            <input type="text" class="form-control" id="keyword" name="keyword" placeholder="Enter the keyword" />
             <button class="btn btn-primary" type="submit">Search</button>
-        </div>
+        </form>
         <div class="main-content p-3">
             <div class="links">
                 <a class="link-primary ml-2" href="#">Home</a>
