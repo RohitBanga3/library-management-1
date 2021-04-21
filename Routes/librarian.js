@@ -25,9 +25,9 @@ async function addUser(req,res){
     const password = req.body.password;
     const encryptedPassword = await bcrypt.hash(password,keys.saltRounds);
 
-    let address = req.body.address ? req.body.address != undefined : null;
+    let address = req.body.address ? req.body.address != '' : null;
 
-    let phone_number = req.body.phone_number ? req.body.phone_number!=undefined : null;
+    let phone_number = req.body.phone_number ? req.body.phone_number!='' : null;
 
     var user = {
         "email":req.body.email,
@@ -41,7 +41,9 @@ async function addUser(req,res){
     var query = 'INSERT INTO user SET ?';
     db.query(query,user,(err,results,fields) => {
         checkError(err,res);
-        res.render('librarianHome.ejs')
+        res.json({
+            error: "added User Successfully"
+        })
     })
 }
 
@@ -195,7 +197,7 @@ router.put('/returnBook',(req,res) => {
         post = {
             user_id : user_id,
             fine_amount : 2*days,
-            book_id : req.body.user_id
+            book_id : req.body.book_id
         }
 
         db.query(query,(err,result) => {
@@ -258,18 +260,19 @@ router.delete('/clearfine',(req,res) => {
 })
 
 router.post('/addUser',(req,res) => {
-    checkLoginLibrarian(req,res);
-    addUser(req,res)
-    .then(() => {
-        return;
-    })
-    .catch((error) => {
-        //console.log(error);
-        res.render('error.ejs',{
-            message:'database error',
-            error:error
-        });
-    })
+    if(checkLoginLibrarian(req,res)){
+        addUser(req,res)
+        .then(() => {
+            return;
+        })
+        .catch((error) => {
+            //console.log(error);
+            res.render('error.ejs',{
+                message:'database error',
+                error:error
+            });
+        })
+    }
 })
 
 router.get('/changePassword',(req,res) => {
@@ -339,48 +342,48 @@ router.put('/changePassword',(req,res) => {
 })
 
 router.get('/searchBook/',(req,res) => {
-    checkLoginLibrarian(req,res);
-
-    var criterion = req.query.criterion;
-    var keyword = req.query.keyword;
-
-
-    if(criterion == 'name'){
-        
-        let query = "SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE title LIKE '%"+keyword+"%'";
-
-        db.query(query,(error,result) => {
-            checkError(error,res);
-            console.log(result);
-            res.render('booksearch.ejs',{
-                books:result,
-                librarian:true
-            });
-        })
-    }
-    else if(criterion == 'ISBN'){
-        let query = "SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE ISBN LIKE '%"+keyword+"%'";
-
-        db.query(query,(error,result) => {
-            checkError(error,res);
-            console.log(result);
-            res.render('booksearch.ejs',{
-                books:result,
-                librarian : true
-            });
-        })
-    }
-    else if(criterion == 'author'){
-        let query = "SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE EXISTS (SELECT author_id FROM author WHERE author.author_id = book.author_id AND author.name LIKE '%"+keyword+"%')";
-        
-        db.query(query,(error,result) => {
-            checkError(error,res);
-            console.log(result);
-            res.render('booksearch.ejs',{
-                books:result,
-                librarian:true
-            });
-        })
+    if(checkLoginLibrarian(req,res)){
+        var criterion = req.query.criterion;
+        var keyword = req.query.keyword;
+    
+    
+        if(criterion == 'name'){
+            
+            let query = "SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE title LIKE '%"+keyword+"%'";
+    
+            db.query(query,(error,result) => {
+                checkError(error,res);
+                console.log(result);
+                res.render('booksearch.ejs',{
+                    books:result,
+                    librarian:true
+                });
+            })
+        }
+        else if(criterion == 'ISBN'){
+            let query = "SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE ISBN LIKE '%"+keyword+"%'";
+    
+            db.query(query,(error,result) => {
+                checkError(error,res);
+                console.log(result);
+                res.render('booksearch.ejs',{
+                    books:result,
+                    librarian : true
+                });
+            })
+        }
+        else if(criterion == 'author'){
+            let query = "SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE EXISTS (SELECT author_id FROM author WHERE author.author_id = book.author_id AND author.name LIKE '%"+keyword+"%')";
+            
+            db.query(query,(error,result) => {
+                checkError(error,res);
+                console.log(result);
+                res.render('booksearch.ejs',{
+                    books:result,
+                    librarian:true
+                });
+            })
+        }
     }
 })
 

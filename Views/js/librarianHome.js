@@ -155,10 +155,91 @@ issueForm.onsubmit = () => {
         return response.json();
     })
     .then((response) => {
+        bookIdIssue.value = '';
+        userIdIssue.value = '';
         errorIssue.textContent = response.error;
     })
     .catch((error) => {
         console.log(error);
+    })
+
+    return false;
+}
+
+let addUserForm = document.getElementById('addUserForm');
+let userIdAdd = document.getElementById('userIdAdd');
+let nameAdd = document.getElementById('nameAdd');
+let emailAdd = document.getElementById('emailAdd');
+let passwordAdd = document.getElementById('passwordAdd');
+let studentAdd = document.getElementById('studentAdd');
+let phoneAdd = document.getElementById('phoneAdd');
+let addressAdd = document.getElementById('addressAdd');
+let errorAddUser = document.getElementById('errorAddUser');
+
+userIdAdd.onchange = () => {
+    errorAddUser.textContent = '';
+}
+
+nameAdd.onchange = () => {
+    errorAddUser.textContent = '';
+}
+
+emailAdd.onchange =  () => {
+    errorAddUser.textContent = '';
+}
+
+passwordAdd.onchange = () => {
+    errorAddUser.textContent = '';
+}
+
+studentAdd.onchange = () => {
+    errorAddUser.textContent = '';
+}
+
+phoneAdd.onchange = () => {
+    errorAddUser.textContent = '';
+}
+addressAdd.onchange = () => {
+    errorAddUser.textContent = '';
+}
+
+
+addUserForm.onsubmit = () => {
+    let body = {
+        email:emailAdd.value,
+        password:passwordAdd.value,
+        name:nameAdd.value,
+        user_id :  userIdAdd.value,
+        phone_number : phoneAdd.value,
+        address:addressAdd.value,
+        student: studentAdd.value
+    }
+
+    let url = '/librarian/addUser';
+
+    fetch(url,{
+        method:"POST",
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify(body),
+        redirect:"follow"
+    })
+    .then((response) => response.json())
+    .then((response) =>{
+        
+        emailAdd.value = '';
+        passwordAdd.value = '';
+        nameAdd.value = ''
+        userIdAdd.value = '';
+        phoneAdd.value = '';
+        addressAdd.value = '';
+        studentAdd.value = '';
+        errorAddUser.textContent = response.error;
+        
+    })
+    .catch((error) => {
+        console.log(error)
     })
 
     return false;
