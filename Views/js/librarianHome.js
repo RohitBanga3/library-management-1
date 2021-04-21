@@ -9,6 +9,8 @@ let returnSection = document.getElementById('returnSection');
 let addBookSection = document.getElementById('addBookSection');
 let deleteBookSection = document.getElementById('deleteBookSection');
 let addUserSection = document.getElementById('addUserSection');
+let fineSection = document.getElementById('fineSection');
+let fineHead = document.getElementById('fineHead');
 
 
 issueHead.onclick = () => {
@@ -31,6 +33,10 @@ issueHead.onclick = () => {
     addUserHead.classList.add('passivebackground');
     addUserSection.classList.add('d-none');
     addUserSection.classList.remove('d-flex');
+
+    fineHead.classList.add('passivebackground');
+    fineSection.classList.add('d-none');
+    fineSection.classList.remove('d-flex');
 }
 
 returnHead.onclick = () => {
@@ -53,6 +59,10 @@ returnHead.onclick = () => {
     addUserHead.classList.add('passivebackground');
     addUserSection.classList.add('d-none');
     addUserSection.classList.remove('d-flex');
+
+    fineHead.classList.add('passivebackground');
+    fineSection.classList.add('d-none');
+    fineSection.classList.remove('d-flex');
 }
 
 addBookHead.onclick = () => {
@@ -75,6 +85,10 @@ addBookHead.onclick = () => {
     addUserHead.classList.add('passivebackground');
     addUserSection.classList.add('d-none');
     addUserSection.classList.remove('d-flex');
+
+    fineHead.classList.add('passivebackground');
+    fineSection.classList.add('d-none');
+    fineSection.classList.remove('d-flex');
 }
 
 deleteBookHead.onclick = () => {
@@ -97,6 +111,10 @@ deleteBookHead.onclick = () => {
     addUserHead.classList.add('passivebackground');
     addUserSection.classList.add('d-none');
     addUserSection.classList.remove('d-flex');
+
+    fineHead.classList.add('passivebackground');
+    fineSection.classList.add('d-none');
+    fineSection.classList.remove('d-flex');
 }
 
 addUserHead.onclick = () => {
@@ -120,6 +138,37 @@ addUserHead.onclick = () => {
     addUserHead.classList.remove('passivebackground');
     addUserSection.classList.remove('d-none');
     addUserSection.classList.add('d-flex');
+
+    fineHead.classList.add('passivebackground');
+    fineSection.classList.add('d-none');
+    fineSection.classList.remove('d-flex');
+}
+
+fineHead.onclick = () => {
+    issueHead.classList.add('passivebackground');
+    isuueSection.classList.add('d-none');
+    isuueSection.classList.remove('d-flex');
+
+    returnHead.classList.add('passivebackground');
+    returnSection.classList.add('d-none');
+    returnSection.classList.remove('d-flex');
+
+    addBookHead.classList.add('passivebackground');
+    addBookSection.classList.add('d-none');
+    addBookSection.classList.remove('d-flex');
+
+    deleteBookHead.classList.add('passivebackground');
+    deleteBookSection.classList.add('d-none');
+    deleteBookSection.classList.remove('d-flex');
+
+
+    addUserHead.classList.add('passivebackground');
+    addUserSection.classList.add('d-none');
+    addUserSection.classList.remove('d-flex');
+
+    fineHead.classList.remove('passivebackground');
+    fineSection.classList.remove('d-none');
+    fineSection.classList.add('d-flex');
 }
 
 
@@ -386,5 +435,57 @@ addUserForm.onsubmit = () => {
         console.log(error)
     })
 
+    return false;
+}
+
+let checkfineForm = document.getElementById('checkfineForm');
+let userIdFine = document.getElementById('userIdFine');
+let errorFine = document.getElementById('errorFine');
+let clearfineForm = document.getElementById('clearfineForm');
+
+userIdFine.onchange = () => {
+    errorFine.textContent = '';
+}
+
+
+checkfineForm.onsubmit = () => {
+
+    let url = '/librarian/checkfine?user_id='+userIdFine.value;
+
+
+    fetch(url)
+    .then((response) => response.json())
+    .then((response) => {
+        errorFine.textContent = 'The total fine is '+response.error+' rupees';
+    })
+    .catch((error) => {
+        console.log(error);
+    })
+
+    return false;
+}
+
+clearfineForm.onsubmit = () => {
+    let body = {
+        user_id : userIdFine.value
+    }
+    let url = '/librarian/clearfine';
+
+    fetch(url,{
+        method:"DELETE",
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify(body),
+        redirect:"follow"
+    })
+    .then((response) => response.json())
+    .then((response) => {
+        console.log(response);
+        errorFine.textContent = response.error;
+    })
+    .catch((error) => {
+        console.log(error);
+    })
     return false;
 }

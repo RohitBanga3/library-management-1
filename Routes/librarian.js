@@ -240,31 +240,39 @@ router.put('/returnBook',(req,res) => {
 });
 
 router.get('/checkfine',(req,res) => {
-    checkLoginLibrarian(req,res);
-
-    let query = 'SELECT SUM(`fine_amount`) AS total_fine FROM `fine` WHERE `user_id` = '+req.body.user_id+' GROUP BY user_id';
-
-    let fine_amount = 0;
-
-    db.query(query,(error,result) => {
-        checkError(error,res);
-        if(result.length > 0){
-            fine_amount = result[0].total_fine;
-        }
+    if(checkLoginLibrarian(req,res)){
+        let query = 'SELECT SUM(`fine_amount`) AS total_fine FROM `fine` WHERE `user_id` = '+req.query.user_id+' GROUP BY user_id';
+        let fine_amount = 0;
         
-        res.render('librarianHome.ejs');
-    })
+        db.query(query,(error,result) => {
+            checkError(error,res);
+            if(result.length > 0){
+                fine_amount = result[0].total_fine;
+            }
+            
+            
+            res.json({
+                error:fine_amount
+            })
+        })
+    }
+
+    
 })
 
 router.delete('/clearfine',(req,res) => {
-    checkLoginLibrarian(req,res);
+    if(checkLoginLibrarian(req,res)){
+        let query = 'DELETE FROM fine WHERE user_id = '+ req.body.user_id;
 
-    let query = 'DELETE FROM fine WHERE user_id = '+ req.body.user_id;
+        db.query(query,(err,result) => {
+            checkError(err,res);
+            res.json({
+                error :  'fine cleared'
+            });
+        })
+    }
 
-    db.query(query,(err,result) => {
-        checkError(err,res);
-        res.render('librarianHome.ejs');
-    })
+   
 
 })
 
