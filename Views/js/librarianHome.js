@@ -166,6 +166,42 @@ issueForm.onsubmit = () => {
     return false;
 }
 
+
+let returnForm = document.getElementById('returnForm');
+let bookIdReturn = document.getElementById('bookIdReturn');
+let errorReturn = document.getElementById('errorReturn');
+
+bookIdReturn.onchange = () => {
+    errorReturn.textContent = '';
+}
+
+returnForm.onsubmit = () => {
+    let body = {
+        book_id : bookIdReturn.value
+    }
+
+    let url = '/librarian/returnBook';
+
+    fetch(url,{
+        method: "PUT",
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify(body),
+        redirect:"follow"
+    })
+    .then((response) => response.json())
+    .then((response) =>{
+        bookIdReturn.value = '';
+        errorReturn.textContent = response.error;
+    })
+    .catch((error) => {
+        console.log(error);
+    })
+
+    return false;
+}
+
 let addUserForm = document.getElementById('addUserForm');
 let userIdAdd = document.getElementById('userIdAdd');
 let nameAdd = document.getElementById('nameAdd');

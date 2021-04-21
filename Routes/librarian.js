@@ -177,57 +177,61 @@ router.put('/issueBook',(req,res) => {
 })
 
 router.put('/returnBook',(req,res) => {
-    checkLoginLibrarian(req,res);
+    if(checkLoginLibrarian(req,res)){
+        let query = 'SELECT DATEDIFF(borrowed_date,CURRENT_DATE()) AS days,borrowed_id,holder_id FROM book WHERE book_id = '+req.body.book_id;
 
-    let query = 'SELECT DATEDIFF(borrowed_date,CURRENT_DATE()) AS days,borrowed_id,holder_id FROM book WHERE book_id = '+req.body.book_id;
-
-    let days = 0,user_id;
-    db.query(query,(err,result) => {
-        checkError(err,res);
-        if(result[0].days > 10){
-            days = result[0].days -10;
-        }
-        user_id = result[0].borrowed_id;
-    })
-
-    let post;
-
-    if(days>0){
-        query = 'INSERT INTO fine SET ?';
-        post = {
-            user_id : user_id,
-            fine_amount : 2*days,
-            book_id : req.body.book_id
-        }
-
+        let days = 0,user_id,holder_id;
         db.query(query,(err,result) => {
             checkError(err,res);
+            if(result[0].days > 10){
+                days = result[0].days -10;
+            }
+            user_id = result[0].borrowed_id;
+
+            holder_id = result[0].holder_id;
+
+            let post;
+
+            if(days>0){
+                query = 'INSERT INTO fine SET ?';
+                post = {
+                    user_id : user_id,
+                    fine_amount : 2*days,
+                    book_id : req.body.book_id
+                }
+
+                db.query(query,(err,result) => {
+                    checkError(err,res);
+                })
+            }
+
+            query = 'UPDATE book SET ? WHERE book_id = '+req.body.book_id;
+
+            let stat;
+
+            if(holder_id == null){
+                stat = 'Available';
+            }
+            else{
+                stat = 'on hold';
+            }
+
+            post = {
+                borrowed_date : null,
+                borrowed_id : null,
+                status : stat
+            }
+
+            db.query(query,post,(err,result,fields) => {
+                checkError(err,res);
+                res.json({
+                    error: "returned Book"
+                });
+            })
+
         })
     }
-
-    query = 'UPDATE book SET ? WHERE book_id = '+req.body.book_id;
-
-    let stat;
-
-    if(holder_id == null){
-        stat = 'Available';
-    }
-    else{
-        stat = 'on hold';
-    }
-
-    post = {
-        borrowed_date : null,
-        borrowed_id : null,
-        status : stat
-    }
-
-    db.query(query,post,(err,result,fields) => {
-        checkError(err,res);
-        res.redirect('/librarian/');
-    })
-
-
+    
 });
 
 router.get('/checkfine',(req,res) => {
