@@ -38,17 +38,78 @@
           <input type="text" class="form-control" id="keyword" name="keyword" placeholder="Enter the keyword" />
           <button class="btn btn-primary" type="submit">Search</button>
       </form>
-      <div class="d-flex justify-content-center">
-        <h5>Issue</h5>
-        <h5>Return</h5>
-        <h5>Add Book</h5>
-        <h5>delete book</h5>
-        <h5>Add user</h5>
-      </div>
-      <div class="d-flex justify-content-center">
-        <div class="issueColumn d-flex flex-column">
-            
+      <div class="content">
+        <div class="d-flex">
+          <h5 id="issueHead" class="section">Issue</h5>
+          <h5 id="returnHead" class="section passivebackground">Return</h5>
+          <h5 id="addBookHead" class="section passivebackground">Add Book</h5>
+          <h5 id="deleteBookHead" class="section passivebackground">delete book</h5>
+          <h5 id="addUserHead" class="section passivebackground">Add user</h5>
         </div>
-      </div>
+        <div class="d-flex flex-column">
+          <div id="issueSection" class="d-flex flex-column">
+              <form style="padding:20px;max-width:300px" id="issueForm" class="form-group d-flex flex-column">
+                <label class="mt-3" for="bookIdIssue">Book ID</label>
+                <input class="mt-1" id="bookIdIssue" type="text">
+                <label class="mt-3" for="userIdIssue">User ID</label>
+                <input class="mt-1" id="userIdIssue" type="text">
+                <p id="errorIssue" class="mt-3"></p>
+                <button type="submit" class="btn btn-primary mt-3">Issue Book</button>
+              </form>
+          </div>
+          <div id="returnSection" class="flex-column d-none">
+            <form style="padding:20px;max-width:300px" id="returnForm" class="form-group d-flex flex-column">
+              <label class="mt-3" for="bookIdReturn">Book ID</label>
+              <input class="mt-1" id="bookIdReturn" type="text">
+              <p class="mt-3"id="errorReturn"></p>
+              <button type="submit" class="btn btn-primary mt-3">Issue Book</button>
+            </form>
+          </div>
+          <div id="addBookSection" class="flex-column d-none">
+            <form style="padding:20px;max-width:300px" id="addBookForm" class="form-group d-flex flex-column">
+              <label class="mt-3" for="bookISBNAdd">ISBN</label>
+              <input class="mt-1" id="bookISBNAdd" type="text">
+              <label class="mt-3" for="bookTitleAdd">Title</label>
+              <input class="mt-1" id="bookcopyAdd" type="text">
+              <label class="mt-3" for="bookcopyAdd">Copy Number</label>
+              <input class="mt-1" id="bookcopyeAdd" type="text">
+              <label class="mt-3" for="bookshelfAdd">Shelf Number</label>
+              <input class="mt-1" id="bookshelfAdd" type="text">
+              <label class="mt-3" for="bookrowAdd">Row Number</label>
+              <input class="mt-1" id="bookrowAdd" type="text">
+              <label class="mt-3" for="bookauthorAdd">Author Id</label>
+              <input class="mt-1" id="bookauthorAdd" type="text">
+              <button type="submit" class="btn btn-primary mt-3">Issue Book</button>
+            </form>
+          </div> 
+          <div id="deleteBookSection" class="flex-column d-none">
+            <form style="padding:20px;max-width:300px" id="deleteBookForm" class="form-group d-flex flex-column">
+              <label class="mt-3" for="bookIdDelete">Book ID</label>
+              <input class="mt-1" id="bookIdDelete" type="text">
+              <button type="submit" class="btn btn-primary mt-3">Issue Book</button>
+            </form>
+          </div>
+          <div id="addUserSection" class="flex-column d-none">
+            <form style="padding:20px;max-width:300px" id="addUserForm" class="form-group d-flex flex-column">
+              <label class="mt-3" for="userIdAdd">User ID</label>
+              <input class="mt-1" id="userIdAdd" type="text">
+              <label class="mt-3" for="nameAdd">Name</label>
+              <input class="mt-1" id="nameAdd" type="text">
+              <label class="mt-3" for="emailAdd">Email</label>
+              <input class="mt-1" id="emailAdd" type="text">
+              <label class="mt-3" for="passwordAdd">Password</label>
+              <input class="mt-1" id="passwordAdd" type="text">
+              <label class="mt-3" for="studentAdd">Student or Not(0/1)</label>
+              <input class="mt-1" id="studentAdd" type="text">
+              <label class="mt-3" for="phoneAdd">Phone Number</label>
+              <input class="mt-1" id="phoneAdd" type="text">
+              <label class="mt-3" for="addressAdd">Address</label>
+              <input class="mt-1" id="addressAdd" type="text">
+              <button type="submit" class="btn btn-primary mt-3">Issue Book</button>
+            </form>
+          </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/js/librarianHome.js"></script>
     </body>
 </html>

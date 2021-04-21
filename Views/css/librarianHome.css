@@ -7,3 +7,15 @@ body{
     box-sizing: border-box;
 }
 
+.passivebackground{
+    background-color: gray;
+    color: white
+}
+
+.section{
+    padding: 10px;
+    border-style: solid;
+    border-color: gray;
+    border-width: 2px;
+    border-radius: 5px
+}

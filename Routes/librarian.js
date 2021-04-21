@@ -57,7 +57,7 @@ router.post('/addBook',(req,res) => {
     var query = 'INSERT INTO `book` SET ?'
 
     var post = {
-        book_id : req.body.book_id,
+        book_id : req.body.ISBN+req.body.copy_number,
         ISBN : req.body.ISBN,
         title : req.body.title,
         copy_number : req.body.copy_number,
@@ -83,67 +83,95 @@ router.delete('/deleteBook',(req,res) => {
 })
 
 router.put('/issueBook',(req,res) => {
-    checkLoginLibrarian(req,res);
-
-    let query = 'SELECT SUM(`fine_amount`) AS total_fine FROM `fine` WHERE `user_id` = '+req.body.user_id+' GROUP BY user_id';
-    let fine_amount,status,overdue;
-    db.query(query,(err,result) =>{
-        checkError(err,res);
-        if(result.length != 0){
-            fine_amount = result[0].total_fine;
-        }
-        else{
-            fine_amount = 0;
-        }
-    })
-    
-    query = 'SELECT status,holder_id FROM book WHERE book_id = '+req.body.book_id;
-
-    let holder;
-
-    db.query(query,(err,result) => {
-        checkError(err,res);
-        status = result[0].status;
-        holder = result[0].holder_id;
-    });
-
-    query = 'SELECT user.user_id FROM (book INNER JOIN user ON user.user_id = book.borrowed_id) WHERE user.user_id = '+req.body.user_id +' AND DATEDIFF(borrowed_date,CURRENT_DATE()) > 10';
-
-
-
-    db.query(query,(err,result) => {
-        checkError(err,res);
-        overdue = result.length > 0;
-    })
-
-    query = 'UPDATE `book` SET ? WHERE book_id = '+req.body.book_id;
-
-    var post = {
-        borrowed_date:new Date(),
-        borrowed_id:req.body.user_id,
-        status: "on loan",
-        holder_id : null,
-        hold_date : null
-    }
-
-    if(fine_amount > 20){
-        res.redirect('/librarian');
-    }
-    else if(status == 'on loan'){
-        res.redirect('/librarian');
-    }
-    else if(status == 'on hold' && holder != req.body.user_id){
-        res.redirect('/librarian');
-    }
-    else if(overdue){
-        res.redirect('/librarian');
-    }
-    else{
-        db.query(query,post,(err,result,fields) => {
+    if(checkLoginLibrarian(req,res)){
+        let query = 'SELECT SUM(`fine_amount`) AS total_fine FROM `fine` WHERE `user_id` = '+req.body.user_id+' GROUP BY user_id';
+        let fine_amount,status,overdue;
+        db.query(query,(err,result) =>{
             checkError(err,res);
-            res.redirect('/librarian');
+            if(result.length != 0){
+                fine_amount = result[0].total_fine;
+            }
+            else{
+                fine_amount = 0;
+            }
+
+            query = 'SELECT status,holder_id FROM book WHERE book_id = '+req.body.book_id;
+    
+            let holder;
+        
+            db.query(query,(err,result) => {
+                checkError(err,res);
+                //console.log(result[0]);
+                status = result[0].status;
+                holder = result[0].holder_id;
+                //console.log(status);
+
+                query = 'SELECT user.user_id FROM (book INNER JOIN user ON user.user_id = book.borrowed_id) WHERE user.user_id = '+req.body.user_id +' AND DATEDIFF(borrowed_date,CURRENT_DATE()) > 10';
+            
+        
+        
+                db.query(query,(err,result) => {
+                    checkError(err,res);
+                    overdue = result.length > 0;
+
+                    query = 'UPDATE `book` SET ? WHERE book_id = '+req.body.book_id;
+            
+                    var post = {
+                        borrowed_date:new Date(),
+                        borrowed_id:req.body.user_id,
+                        status: "on loan",
+                        holder_id : null,
+                        hold_date : null
+                    }
+
+                    //console.log(status);
+
+                    if(fine_amount > 20){
+                        res.json({
+                            error: "user has to pay fine to issue"
+                        })
+                        res.end();
+                    }
+                    else if(status == 'on loan'){
+                        console.log(status);
+                        res.json({
+                            error: "book is already on loan"
+                        })
+                        res.end();
+                    }
+                    else if(status == 'on hold' && holder != req.body.user_id){
+                        res.json({
+                            error:"book is on hold by other user"
+                        })
+                        res.end();
+                    }
+                    else if(overdue){
+                        res.json({
+                            error: "user has a book on loan which is overdue"
+                        })
+                        res.end();
+                    }
+                    else{
+                        db.query(query,post,(err,result,fields) => {
+                            checkError(err,res);
+                            res.json({
+                                error:"Book Issued to user"
+                            })
+                            res.end();
+                        });
+                    }
+
+                })
+            })
         });
+        
+            
+        
+        
     }
+    
+
+   
 })
 
 router.put('/returnBook',(req,res) => {
