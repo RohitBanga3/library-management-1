@@ -58,7 +58,7 @@
                                 <p>book id:<%=locals.books[i].book_id%></p>
                                 <p>Status:<%=locals.books[i].status%></p>
                             </div>
-                            <%if(locals.books[i].status != 'on hold' && locals.librarian == undefined) {%>
+                            <%if(locals.books[i].status != 'on hold' && locals.librarian != true) {%>
                                 <form id="holdform">
                                     <input id="book_id" type="hidden" value="<%=locals.books[i].book_id%>" name="book_id">
                                     <button style="height: 20%;" href="#" class="btn btn-primary" type="submit">Hold book</a>

@@ -301,8 +301,6 @@ router.get('/searchBook/',(req,res) => {
     var criterion = req.query.criterion;
     var keyword = req.query.keyword;
 
-    console.log(criterion);
-    console.log(keyword);
 
     if(criterion == 'name'){
         
@@ -336,7 +334,8 @@ router.get('/searchBook/',(req,res) => {
             checkError(error,res);
             console.log(result);
             res.render('booksearch.ejs',{
-                books:result
+                books:result,
+                librarian:true
             });
         })
     }

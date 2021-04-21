@@ -6,7 +6,8 @@ const keys = require('../config/keys');
 function checkLoginLibrarian(req,res){
     //console.log(req.session,req.session.librariankey,keys.librariankey);
     if(req.session.librarianKey != keys.librariankey){
-        res.render('librarianHome.ejs');
+       // console.log('lokesh');
+        res.render('loginlibrarian.ejs');
         return false;
     }
     return true;
@@ -98,7 +99,7 @@ librarianLogin = async function(req,res){
 }
 
 router.get('/userlogin',(req,res) => {
-    console.log("lokesh")
+    //console.log("lokesh")
     if(checkLoginUser(req,res)){
         res.redirect('/user/');
     }
@@ -106,6 +107,7 @@ router.get('/userlogin',(req,res) => {
 
 router.get('/librarianlogin',(req,res) => {
     if(checkLoginLibrarian(req,res)){
+        console.log('lokkeh');
         res.redirect('/librarian/');
     }
 })

@@ -49,8 +49,12 @@
                 <a class="link-primary ml-2" href="#">Any other links</a>
             </div>
             <div class="issued">
-                <h2>Issued Books</h2>
-                <ul class="list-group">
+                <div class="d-flex">
+                    <h5 id="issueHead" class="section">Issued Books</h5>
+                    <h5 id="holdHead" class="section passivebackground">Books on hold</h5>
+                    <h5 id="fineHead" class="section passivebackground">Fines</h5>
+                </div>
+                <ul class="list-group issuedBooks" id="issuedBooks">
                     <%if(locals.issuedBooks.length==0){%>
                         <h3>No books issued</h3>
                     <%}else{%>
@@ -63,10 +67,7 @@
                                      <p>ISBN: <%=locals.issuedBooks[i].ISBN%></p>
                                      <p>Book id <%=locals.issuedBooks[i].book_id%></p>
                                      <%var dueDate = locals.issuedBooks[i].borrowed_date;
-                                     console.log(dueDate);
                                      dueDate.setDate(dueDate.getDate()+10);
-                                     console.log(dueDate);
-                                     
                                      var datestring = `${dueDate.getDate()} - ${dueDate.getMonth()+1} - ${dueDate.getFullYear()}`
                                      %>
                                      <p>Due date : <%=datestring%></p>
@@ -79,7 +80,41 @@
                     <%}%>
                     
                 </ul>
+                <ul class="list-group holdBooks d-none" id="holdBooks">
+                    <%if(locals.holdBooks.length == 0){%>
+                        <h3>No books on hold</h3>
+                    <%}else{%>
+                        <%for(let i=0;i<locals.holdBooks.length;i++){%>
+                            <li class="d-flex list-group-item bookItem">
+                                <img class="bookimage" src="#"/> 
+                                <div class="bookdetails">
+                                    <h4>Title: <%=locals.holdBooks[i].title%></h4>
+                                    <p>Author: <%=locals.holdBooks[i].name%></p>
+                                    <p>ISBN: <%=locals.holdBooks[i].ISBN%></p>
+                                    <p>Book id: <%=locals.holdBooks[i].book_id%></p>
+                                    <%if(locals.holdBooks[i].borrowed_id != null){
+                                        var dueDate = locals.holdBooks[i].borrowed_date;
+                                        dueDate.setDate(dueDate.getDate()+10);
+                                        var datestring = `${dueDate.getDate()} - ${dueDate.getMonth()+1} - ${dueDate.getFullYear()}`;
+                                        %>
+                                        <p>Due date : <%=datestring%></p>
+                                    <%}else{
+                                        var holdDate = locals.holdBooks[i].hold_date;
+                                        holdDate.setDate(holdDate.getDate()+10);
+                                        var holdstring = `${holdDate.getDate()} - ${holdDate.getMonth()+1} - ${holdDate.getFullYear()}`;
+                                        %>
+                                        <p>Issue Book before : <%=holdstring%></p>
+                                    <%}%>
+                                </div>
+                            </li>
+                        <%}%>
+                    <%}%>
+                </ul>
+                <ul class="list-group fine d-none" id="fine">
+                    <p>You have <%=locals.total_fine%> rupees unpaid fine</p>
+                </ul>
             </div>
         </div>
+        <script type="text/javascript" src="/js/userHome.js"></script>
     </body>
 </html>

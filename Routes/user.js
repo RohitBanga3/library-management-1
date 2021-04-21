@@ -45,6 +45,7 @@ router.get('/',(req,res) => {
                     if(result.length > 0){
                         total_fine = result[0].total_fine;
                     }
+                    //console.log(holdBooks);
                     res.render('userHome.ejs',{
                         issuedBooks : issuedBooks,
                         holdBooks : holdBooks,
