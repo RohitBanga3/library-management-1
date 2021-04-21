@@ -54,24 +54,27 @@ router.get('/',(req,res) => {
 })
 
 router.post('/addBook',(req,res) => {
-    checkLoginLibrarian(req,res);
+    if(checkLoginLibrarian(req,res)){
+        var query = 'INSERT INTO `book` SET ?'
 
-    var query = 'INSERT INTO `book` SET ?'
+        var post = {
+            book_id : req.body.ISBN+req.body.copy_number,
+            ISBN : req.body.ISBN,
+            title : req.body.title,
+            copy_number : req.body.copy_number,
+            shelf_id : req.body.shelf_id,
+            row_number : req.body.row_number,
+            author_id : req.body.author_id
+        }
 
-    var post = {
-        book_id : req.body.ISBN+req.body.copy_number,
-        ISBN : req.body.ISBN,
-        title : req.body.title,
-        copy_number : req.body.copy_number,
-        shelf_id : req.body.shelf_id,
-        row_number : req.body.row_number,
-        author_id : req.body.author_id
+        db.query(query,post,(err,result) => {
+            checkError(err,res);
+            res.json({
+                error: "book added successfully"
+            });
+        });
     }
-
-    db.query(query,post,(err,result) => {
-        checkError(err,res);
-        res.render('librarianHome.ejs');
-    });
+    
 })
 
 router.delete('/deleteBook',(req,res) => {

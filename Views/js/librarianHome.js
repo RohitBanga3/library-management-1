@@ -1,3 +1,4 @@
+
 let issueHead = document.getElementById('issueHead');
 let returnHead = document.getElementById('returnHead');
 let addBookHead = document.getElementById('addBookHead');
@@ -163,6 +164,77 @@ issueForm.onsubmit = () => {
         console.log(error);
     })
 
+    return false;
+}
+
+let addBookForm = document.getElementById('addBookForm');
+let bookISBNAdd = document.getElementById('bookISBNAdd');
+let bookTitleAdd = document.getElementById('bookTitleAdd');
+let bookcopyAdd = document.getElementById('bookcopyAdd');
+let bookshelfAdd = document.getElementById('bookshelfAdd');
+let bookrowAdd = document.getElementById('bookrowAdd');
+let bookauthorAdd = document.getElementById('bookauthorAdd');
+let errorBookAdd = document.getElementById('errorBookAdd');
+
+
+bookISBNAdd.onchange = () => {
+    errorBookAdd.textContent = '';
+}
+
+bookTitleAdd.onchange = () => {
+    errorBookAdd.textContent = '';
+}
+
+bookcopyAdd.onchange = () => {
+    errorBookAdd.textContent = '';
+}
+
+bookshelfAdd.onchange = () => {
+    errorBookAdd.textContent = '';
+}
+
+bookrowAdd.onchange = () => {
+    errorBookAdd.textContent = '';
+}
+
+bookauthorAdd.onchange = () =>{
+    errorBookAdd.textContent = '';
+}
+
+addBookForm.onsubmit = () => {
+    let body = {
+        ISBN : bookISBNAdd.value,
+        title : bookTitleAdd.value,
+        copy_number : bookcopyAdd.value,
+        shelf_id : bookshelfAdd.value,
+        row_number : bookrowAdd.value,
+        author_id : bookauthorAdd.value
+    }
+
+    let url = '/librarian/addBook';
+
+    fetch(url,{
+        method: "POST",
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify(body),
+        redirect:"follow"
+    })
+    .then((response) => response.json())
+    .then((response) => {
+        //console.log(response.error);
+        bookISBNAdd.value = '';
+        bookTitleAdd.value = '';
+        bookcopyAdd.value = '';
+        bookshelfAdd.value = '';
+        bookrowAdd.value = '';
+        bookauthorAdd.value = '';
+        errorBookAdd.textContent = response.error; 
+    })
+    .catch((error) => {
+        console.log(error);
+    })
     return false;
 }
 
