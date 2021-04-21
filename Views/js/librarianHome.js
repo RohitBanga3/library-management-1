@@ -167,6 +167,8 @@ issueForm.onsubmit = () => {
     return false;
 }
 
+
+
 let addBookForm = document.getElementById('addBookForm');
 let bookISBNAdd = document.getElementById('bookISBNAdd');
 let bookTitleAdd = document.getElementById('bookTitleAdd');
@@ -238,6 +240,40 @@ addBookForm.onsubmit = () => {
     return false;
 }
 
+let deleteBookForm = document.getElementById('deleteBookForm');
+let bookIdDelete = document.getElementById('bookIdDelete');
+let errorDelete = document.getElementById('errorDelete');
+
+bookIdDelete.onchange = () => {
+    errorDelete.textContent =  '';
+}
+
+deleteBookForm.onsubmit = () => {
+    let body = {
+        book_id : bookIdDelete.value
+    }
+
+    let url = '/librarian/deleteBook'
+
+    fetch(url,{
+        method:"DELETE",
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify(body),
+        redirect:"follow"
+    })
+    .then((response) => response.json())
+    .then((response) => {
+        bookIdDelete.value = '';
+        errorDelete.textContent = response.error;
+    })
+    .catch((error) => {
+        console.log(error);
+    })
+
+    return false;
+}
 
 let returnForm = document.getElementById('returnForm');
 let bookIdReturn = document.getElementById('bookIdReturn');

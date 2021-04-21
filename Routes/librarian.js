@@ -78,13 +78,15 @@ router.post('/addBook',(req,res) => {
 })
 
 router.delete('/deleteBook',(req,res) => {
-    checkLoginLibrarian(req,res);
-
-    var query = 'DELETE FROM `book` WHERE `book_id` = '+ req.body.book_id;
-    db.query(query,(err,result,fileds) => {
-        checkError(err,res);
-        res.render('librarianHome.ejs');
-    });
+    if(checkLoginLibrarian(req,res)){
+        var query = 'DELETE FROM `book` WHERE `book_id` = '+ req.body.book_id;
+        db.query(query,(err,result,fileds) => {
+            checkError(err,res);
+            res.json({
+                error: "book deleted successfully"
+            })
+        });
+    }
 })
 
 router.put('/issueBook',(req,res) => {
