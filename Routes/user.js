@@ -137,6 +137,12 @@ router.get('/searchBook',(req,res) => {
     }
 })
 
+router.get('/changePassword',(req,res) => {
+    if(checkLoginUser(req,res)){
+        res.render('changepassword.ejs')
+    }
+})
+
 router.put('/changePassword',(req,res) => {
     checkLoginUser(req,res);
 
@@ -154,13 +160,19 @@ router.put('/changePassword',(req,res) => {
 
         bcrypt.compare(old_password,old_password_db)
         .then((same_old) => {
-            
+            console.log(same_old);
             if(!same_old){
-                res.render('userHome.ejs')
+                //console.log("lokesh1");
+                res.json({
+                    error:"old password doesn't match"
+                })
+                res.end();
             }
             else{
                 let encryptedPassword;
                 query = 'UPDATE user SET ?';
+
+                console.log(new_password)
         
                 bcrypt.hash(new_password,keys.saltRounds)
                 .then((password) => {
@@ -171,17 +183,28 @@ router.put('/changePassword',(req,res) => {
             
                     db.query(query,post,(err,result) => {
                         checkError(err,res);
-                        res.render('userHome.ejs');
+                        console.log("lokesh")
+                        res.json({
+                            error: "password successfully changed"
+                        });
+                        res.end();
                     })
                 })
                 .catch((error) => {
-                    res.render('error.ejs');
+                    console.log(error);
+                    res.render('error.ejs',{
+                        message:"internal error",
+                        error:error
+                    });
                 })
             }
         })
         .catch((error) => {
             console.log(error);
-            res.render('error.ejs');
+            res.render('error.ejs',{
+                message:"database error",
+                error:error
+            });
         })
     })
     

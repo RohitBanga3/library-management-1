@@ -6,7 +6,9 @@ const keys = require('../config/keys');
 function checkLoginLibrarian(req,res){
     if(req.session.librarianKey != keys.librariankey){
         res.redirect('../auth/logout');
+        return false;
     }
+    return true;
 }
 
 function checkError(error,res){
@@ -240,6 +242,10 @@ router.post('/addUser',(req,res) => {
             error:error
         });
     })
+})
+
+router.get('/changePassword',(req,res) => {
+    checkLoginLibrarian(req,res);
 })
 
 router.put('/changePassword',(req,res) => {
