@@ -15,7 +15,6 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
-          
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
@@ -60,8 +59,8 @@
                             </div>
                             <%if(locals.books[i].status != 'on hold' && locals.librarian != true) {%>
                                 <form id="holdform">
-                                    <input id="book_id" type="hidden" value="<%=locals.books[i].book_id%>" name="book_id">
-                                    <button style="height: 20%;" href="#" class="btn btn-primary" type="submit">Hold book</a>
+                                    <input id="book_id" type="hidden" value="<%=locals.books[i].book_id%>" name="book_id" />
+                                    <a style="height: 20%;" href="#" class="btn btn-primary" type="submit">Hold book</a>
                                 </form>
                             <%}%>
                         </li>
@@ -69,7 +68,6 @@
                 <%}%>
             </ul>
         </div>
-    </div>
-    <script type="text/javascript" src="/js/holdbook.js"></script>
+        <script type="text/javascript" src="/js/holdbook.js"></script>
     </body>
 </html>

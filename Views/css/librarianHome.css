@@ -1,21 +1,59 @@
-body{
-    margin: 0px;
-    min-height: 100vh;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&family=Roboto:wght@100&family=Ubuntu+Condensed&display=swap");
+
+body {
+	margin: 0px;
+	min-height: 100vh;
+	background-color: #f6f6f6;
+	background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+		url("../img/lib.jpg");
+	background-size: contain;
+	background-attachment: fixed;
+	font-family: "Ubuntu Condensed";
 }
 
-*{
-    box-sizing: border-box;
+.navbar {
+	position: sticky;
+	top: 0;
 }
 
-.passivebackground{
-    background-color: gray;
-    color: white
+* {
+	box-sizing: border-box;
 }
 
-.section{
-    padding: 10px;
-    border-style: solid;
-    border-color: gray;
-    border-width: 2px;
-    border-radius: 5px
+.forms form {
+	background-color: rgba(0, 0, 0, 0.6);
+	color: white;
+	padding: 20px;
+	border-radius: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.section {
+	padding: 10px;
+	border-style: solid;
+	border-color: gray;
+	border-width: 2px;
+	border-radius: 5px;
+	color: #000;
+	margin: 10px;
+	background-color: #fff;
+}
+
+.passivebackground {
+	background-color: gray;
+	color: white;
+}
+
+.content h5:hover {
+	color: black;
+	background: #fff;
+	cursor: pointer;
+	margin: 10px;
+}
+
+.nav-item {
+	margin-right: 20px;
 }
