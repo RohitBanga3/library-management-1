@@ -245,8 +245,11 @@ router.post('/addUser',(req,res) => {
 })
 
 router.get('/changePassword',(req,res) => {
-    checkLoginLibrarian(req,res);
+    if(checkLoginLibrarian(req,res)){
+        res.render('changepassword.ejs')
+    }
 })
+
 
 router.put('/changePassword',(req,res) => {
     checkLoginLibrarian(req,res);
@@ -265,7 +268,10 @@ router.put('/changePassword',(req,res) => {
         bcrypt.compare(old_password,old_password_db)
         .then((same_old) => {
             if(!same_old){
-                res.render('librarianHome.ejs')
+                res.json({
+                    error:"old password doesn't match"
+                })
+                res.end();
             }
             else{
                 let encryptedPassword;
@@ -280,7 +286,10 @@ router.put('/changePassword',(req,res) => {
             
                     db.query(query,post,(err,result) => {
                         checkError(err,res);
-                        res.render('librarianHome.ejs');
+                        res.json({
+                            error: "password successfully changed"
+                        });
+                        res.end();
                     })
                 })
                 .catch((error) => {

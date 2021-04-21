@@ -19,7 +19,7 @@ passwordform.onsubmit = () => {
         new_password : newpassword.value 
     }
 
-    let url = '/user/changepassword';
+    let url = './changepassword';
 
     fetch(url,{
         method:"PUT",
