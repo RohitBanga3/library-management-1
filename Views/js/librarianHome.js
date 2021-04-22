@@ -12,6 +12,8 @@ let addUserSection = document.getElementById("addUserSection");
 let addAuthorSection = document.getElementById("addAuthorSection");
 let fineSection = document.getElementById("fineSection");
 let fineHead = document.getElementById("fineHead");
+let authorHead = document.getElementById('authorHead');
+let authorSection = document.getElementById('authorSection')
 
 issueHead.onclick = () => {
 	issueHead.classList.remove("passivebackground");
@@ -41,6 +43,10 @@ issueHead.onclick = () => {
 	fineHead.classList.add("passivebackground");
 	fineSection.classList.add("d-none");
 	fineSection.classList.remove("d-flex");
+
+	authorHead.classList.add("passivebackground");
+	authorSection.classList.add('d-none');
+	authorSection.classList.remove('d-flex');
 };
 
 returnHead.onclick = () => {
@@ -71,6 +77,10 @@ returnHead.onclick = () => {
 	fineHead.classList.add("passivebackground");
 	fineSection.classList.add("d-none");
 	fineSection.classList.remove("d-flex");
+
+	authorHead.classList.add("passivebackground");
+	authorSection.classList.add('d-none');
+	authorSection.classList.remove('d-flex');
 };
 
 addBookHead.onclick = () => {
@@ -101,6 +111,10 @@ addBookHead.onclick = () => {
 	fineHead.classList.add("passivebackground");
 	fineSection.classList.add("d-none");
 	fineSection.classList.remove("d-flex");
+
+	authorHead.classList.add("passivebackground");
+	authorSection.classList.add('d-none');
+	authorSection.classList.remove('d-flex');
 };
 
 deleteBookHead.onclick = () => {
@@ -131,6 +145,10 @@ deleteBookHead.onclick = () => {
 	fineHead.classList.add("passivebackground");
 	fineSection.classList.add("d-none");
 	fineSection.classList.remove("d-flex");
+
+	authorHead.classList.add("passivebackground");
+	authorSection.classList.add('d-none');
+	authorSection.classList.remove('d-flex');
 };
 
 addUserHead.onclick = () => {
@@ -161,6 +179,10 @@ addUserHead.onclick = () => {
 	fineHead.classList.add("passivebackground");
 	fineSection.classList.add("d-none");
 	fineSection.classList.remove("d-flex");
+
+	authorHead.classList.add("passivebackground");
+	authorSection.classList.add('d-none');
+	authorSection.classList.remove('d-flex');
 };
 
 addAuthorHead.onclick = () => {
@@ -191,6 +213,10 @@ addAuthorHead.onclick = () => {
 	fineHead.classList.add("passivebackground");
 	fineSection.classList.add("d-none");
 	fineSection.classList.remove("d-flex");
+
+	authorHead.classList.add("passivebackground");
+	authorSection.classList.add('d-none');
+	authorSection.classList.remove('d-flex');
 };
 
 fineHead.onclick = () => {
@@ -221,7 +247,45 @@ fineHead.onclick = () => {
 	fineHead.classList.remove("passivebackground");
 	fineSection.classList.remove("d-none");
 	fineSection.classList.add("d-flex");
+
+	authorHead.classList.add("passivebackground");
+	authorSection.classList.add('d-none');
+	authorSection.classList.remove('d-flex');
 };
+
+authorHead.onclick = () => {
+	issueHead.classList.add("passivebackground");
+	isuueSection.classList.add("d-none");
+	isuueSection.classList.remove("d-flex");
+
+	returnHead.classList.add("passivebackground");
+	returnSection.classList.add("d-none");
+	returnSection.classList.remove("d-flex");
+
+	addBookHead.classList.add("passivebackground");
+	addBookSection.classList.add("d-none");
+	addBookSection.classList.remove("d-flex");
+
+	deleteBookHead.classList.add("passivebackground");
+	deleteBookSection.classList.add("d-none");
+	deleteBookSection.classList.remove("d-flex");
+
+	addUserHead.classList.add("passivebackground");
+	addUserSection.classList.add("d-none");
+	addUserSection.classList.remove("d-flex");
+
+	addAuthorHead.classList.add("passivebackground");
+	addAuthorSection.classList.add("d-none");
+	addAuthorSection.classList.remove("d-flex");
+
+	fineHead.classList.add("passivebackground");
+	fineSection.classList.add("d-none");
+	fineSection.classList.remove("d-flex");
+
+	authorHead.classList.remove("passivebackground");
+	authorSection.classList.remove('d-none');
+	authorSection.classList.add('d-flex');
+}
 
 let issueForm = document.getElementById("issueForm");
 let bookIdIssue = document.getElementById("bookIdIssue");
