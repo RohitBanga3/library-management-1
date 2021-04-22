@@ -70,7 +70,7 @@
 				class="form-control"
 				id="keyword"
 				name="keyword"
-				placeholder="Enter the keyword"
+				placeholder="Enter the keyword (Empty to view all books)"
 			/>
 			<button class="btn btn-primary" type="submit">Search</button>
 		</form>
@@ -81,6 +81,7 @@
 				<h5 id="addBookHead" class="section passivebackground">Add Book</h5>
 				<h5 id="deleteBookHead" class="section passivebackground">Delete Book</h5>
 				<h5 id="addUserHead" class="section passivebackground">Add User</h5>
+				<h5 id="addAuthorHead" class="section passivebackground">Add Author</h5>
 				<h5 id="fineHead" class="section passivebackground">Fine</h5>
 				<h5 id="authorHead" class="section passivebackground">Author Details</h5>
 			</div>
@@ -100,7 +101,10 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<p id="errorIssue" class="mt-3"></p>
+							<p id="errorIssue" style="color: red" class="mt-3"></p>
+						</div>
+						<div class="form-group">
+							<p id="successIssue" style="color: green" class="mt-3"></p>
 						</div>
 						<div class="form-group">
 							<button type="submit" class="btn btn-primary">Issue Book</button>
@@ -116,7 +120,10 @@
 							</div>
 						</div>
 						<div class="form-group m-3">
-							<p class="mt-3" id="errorReturn"></p>
+							<p class="mt-3" style="color: red" id="errorReturn"></p>
+						</div>
+						<div class="form-group m-3">
+							<p class="mt-3" style="color: green" id="successReturn"></p>
 						</div>
 						<div class="form-group m-3">
 							<button type="submit" class="btn btn-primary">Return Book</button>
@@ -152,7 +159,10 @@
 							</div>
 						</div>
 						<div class="form-group m-3">
-							<p class="mt-3" id="errorBookAdd"></p>
+							<p class="mt-3" style="color: red" id="errorBookAdd"></p>
+						</div>
+						<div class="form-group m-3">
+							<p class="mt-3" style="color: green" id="successBookAdd"></p>
 						</div>
 						<div class="form-group m-3">
 							<button type="submit" class="btn btn-primary">Add Book</button>
@@ -168,7 +178,10 @@
 							</div>
 						</div>
 						<div class="form-group m-3">
-							<p class="mt-3" id="errorDelete"></p>
+							<p class="mt-3" style="color: red" id="errorDelete"></p>
+						</div>
+						<div class="form-group m-3">
+							<p class="mt-3" style="color: green" id="successDelete"></p>
 						</div>
 						<div class="form-group m-3">
 							<button type="submit" class="btn btn-primary">Delete Book</button>
@@ -208,10 +221,32 @@
 							</div>
 						</div>
 						<div class="form-group m-3">
-							<p class="mt-3" id="errorAddUser"></p>
+							<p class="mt-3" style="color: red" id="errorAddUser"></p>
+						</div>
+						<div class="form-group m-3">
+							<p class="mt-3" style="color: green" id="successAddUser"></p>
 						</div>
 						<div class="form-group m-3">
 							<button type="submit" class="btn btn-primary">Add User</button>
+						</div>
+					</form>
+				</div>
+				<div id="addAuthorSection" class="flex-column d-none">
+					<form id="addAuthorForm">
+						<div style="display: flex; flex-wrap: wrap; justify-content: center">
+							<div class="form-group m-3">
+								<label class="mt-1" for="authorNameAdd">Author Name</label>
+								<input class="mt-1 form-control" id="authorNameAdd" type="text" />
+							</div>
+						</div>
+						<div class="form-group m-3">
+							<p class="mt-3" style="color: red" id="errorAddAuthor"></p>
+						</div>
+						<div class="form-group m-3">
+							<p class="mt-3" style="color: green" id="successAddAuthor"></p>
+						</div>
+						<div class="form-group m-3">
+							<button type="submit" class="btn btn-primary">Add Author</button>
 						</div>
 					</form>
 				</div>
@@ -229,7 +264,10 @@
 					</form>
 					<form id="clearfineForm">
 						<div class="form-group m-3">
-							<p class="mt-3" id="errorFine"></p>
+							<p class="mt-3" style="color: red" id="errorFine"></p>
+						</div>
+						<div class="form-group m-3">
+							<p class="mt-3" style="color: green" id="successFine"></p>
 						</div>
 						<div class="form-group m-3">
 							<button type="submit" class="btn btn-primary">clearFine</button>

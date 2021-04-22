@@ -17,6 +17,7 @@ function checkError(error, res) {
 		res.render("error.ejs", {
 			message: "database error",
 			error: error,
+			success: "",
 		});
 	}
 }
@@ -42,7 +43,8 @@ async function addUser(req, res) {
 	db.query(query, user, (err, results, fields) => {
 		checkError(err, res);
 		res.json({
-			error: "added User Successfully",
+			success: "User Added Successfully",
+			error: "",
 		});
 	});
 }
@@ -61,22 +63,23 @@ router.get("/", (req, res) => {
 	}
 });
 
-router.post("/addAuthor",(req,res) => {
-	if(checkLoginLibrarian(req,res)) {
+router.post("/addAuthor", (req, res) => {
+	if (checkLoginLibrarian(req, res)) {
 		let query = "INSERT INTO `author` SET ?";
 
 		let post = {
-			name : req.body.name
-		}
+			name: req.body.name,
+		};
 
-		db.query(query,post,(err,result) => {
-			checkError(err,res);
+		db.query(query, post, (err, result) => {
+			checkError(err, res);
 			res.json({
-				error: "Author Added Successfully"
-			})
-		})
+				success: "Author Added Successfully",
+				error: "",
+			});
+		});
 	}
-})
+});
 
 router.post("/addBook", (req, res) => {
 	if (checkLoginLibrarian(req, res)) {
@@ -95,7 +98,8 @@ router.post("/addBook", (req, res) => {
 		db.query(query, post, (err, result) => {
 			checkError(err, res);
 			res.json({
-				error: "book added successfully",
+				success: "book added successfully",
+				error: "",
 			});
 		});
 	}
@@ -107,7 +111,8 @@ router.delete("/deleteBook", (req, res) => {
 		db.query(query, (err, result, fileds) => {
 			checkError(err, res);
 			res.json({
-				error: "book deleted successfully",
+				success: "book deleted successfully",
+				error: "",
 			});
 		});
 	}
@@ -163,29 +168,34 @@ router.put("/issueBook", (req, res) => {
 					if (fine_amount > 20) {
 						res.json({
 							error: "user has to pay fine to issue",
+							success: "",
 						});
 						res.end();
 					} else if (status == "on loan") {
 						console.log(status);
 						res.json({
 							error: "book is already on loan",
+							success: "",
 						});
 						res.end();
 					} else if (status == "on hold" && holder != req.body.user_id) {
 						res.json({
 							error: "book is on hold by other user",
+							success: "",
 						});
 						res.end();
 					} else if (overdue) {
 						res.json({
 							error: "user has a book on loan which is overdue",
+							success: "",
 						});
 						res.end();
 					} else {
 						db.query(query, post, (err, result, fields) => {
 							checkError(err, res);
 							res.json({
-								error: "Book Issued to user",
+								success: "Book Issued to user",
+								error: "",
 							});
 							res.end();
 						});
@@ -248,7 +258,8 @@ router.put("/returnBook", (req, res) => {
 			db.query(query, post, (err, result, fields) => {
 				checkError(err, res);
 				res.json({
-					error: "returned Book",
+					success: "returned Book",
+					error: "",
 				});
 			});
 		});
@@ -270,7 +281,8 @@ router.get("/checkfine", (req, res) => {
 			}
 
 			res.json({
-				error: fine_amount,
+				success: fine_amount,
+				error: "",
 			});
 		});
 	}
@@ -283,7 +295,8 @@ router.delete("/clearfine", (req, res) => {
 		db.query(query, (err, result) => {
 			checkError(err, res);
 			res.json({
-				error: "fine cleared",
+				success: "fine cleared",
+				error: "",
 			});
 		});
 	}
@@ -300,6 +313,7 @@ router.post("/addUser", (req, res) => {
 				res.render("error.ejs", {
 					message: "database error",
 					error: error,
+					success: "",
 				});
 			});
 	}
@@ -331,6 +345,7 @@ router.put("/changePassword", (req, res) => {
 				if (!same_old) {
 					res.json({
 						error: "old password doesn't match",
+						success: "",
 					});
 					res.end();
 				} else {
@@ -348,7 +363,8 @@ router.put("/changePassword", (req, res) => {
 							db.query(query, post, (err, result) => {
 								checkError(err, res);
 								res.json({
-									error: "password successfully changed",
+									success: "password successfully changed",
+									error: "",
 								});
 								res.end();
 							});
@@ -357,6 +373,7 @@ router.put("/changePassword", (req, res) => {
 							res.render("error.ejs", {
 								message: "internal error",
 								error: error,
+								success: "",
 							});
 						});
 				}
@@ -365,6 +382,7 @@ router.put("/changePassword", (req, res) => {
 				res.render("error.ejs", {
 					message: "internal error",
 					error: error,
+					success: "",
 				});
 			});
 	});
