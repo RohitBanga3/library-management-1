@@ -193,11 +193,20 @@ router.put("/issueBook", (req, res) => {
 					} else {
 						db.query(query, post, (err, result, fields) => {
 							checkError(err, res);
-							res.json({
-								success: "Book Issued to user",
-								error: "",
-							});
-							res.end();
+							let query = 'INSERT INTO `history` SET ?'
+							let post = {
+								user_id : req.body.user_id,
+								book_id : req.body.book_id,
+								date : new Date()
+							}
+							db.query(query,post,(err,result) => {
+								checkError(err,res);
+								res.json({
+									success: "Book Issued to user",
+									error: "",
+								});
+								res.end();
+							})
 						});
 					}
 				});
