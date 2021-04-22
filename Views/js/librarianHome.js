@@ -227,6 +227,7 @@ let bookrowAdd = document.getElementById('bookrowAdd');
 let bookauthorAdd = document.getElementById('bookauthorAdd');
 let errorBookAdd = document.getElementById('errorBookAdd');
 
+console.log(errorBookAdd);
 
 bookISBNAdd.onchange = () => {
     errorBookAdd.textContent = '';
@@ -443,7 +444,6 @@ let userIdFine = document.getElementById('userIdFine');
 let errorFine = document.getElementById('errorFine');
 let clearfineForm = document.getElementById('clearfineForm');
 
-console.log(checkfineForm);
 
 userIdFine.onchange = () => {
     errorFine.textContent = '';
