@@ -11,6 +11,12 @@ body {
 	font-family: "Ubuntu Condensed";
 }
 
+.navbar {
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+}
+
 .nav-item {
 	margin-right: 20px;
 }
@@ -28,6 +34,7 @@ body {
 .bookItem {
 	flex-direction: column;
 	background-color: #eee;
+	margin: 10px;
 }
 
 .links {
@@ -51,6 +58,7 @@ body {
 	align-items: stretch;
 	flex-wrap: wrap;
 	flex-direction: row;
+	justify-content: space-evenly;
 }
 
 .bookdetails p {
