@@ -60,7 +60,6 @@ router.get('/',(req,res) => {
 
 router.put('/holdBook',(req,res) => {
     if(checkLoginUser(req,res)){
-        console.log(req.body);
 
         let query = 'SELECT holder_id FROM book WHERE book_id = '+req.body.book_id+ ' AND holder_id IS NOT NULL';
 
@@ -97,8 +96,6 @@ router.get('/searchBook',(req,res) => {
     var criterion = req.query.criterion;
     var keyword = req.query.keyword;
 
-    console.log(criterion);
-    console.log(keyword);
 
     if(criterion == 'name'){
         
@@ -129,7 +126,7 @@ router.get('/searchBook',(req,res) => {
         
         db.query(query,(error,result) => {
             checkError(error,res);
-            console.log(result);
+            
             res.render('booksearch.ejs',{
                 books:result
             });

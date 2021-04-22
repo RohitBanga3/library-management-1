@@ -443,6 +443,8 @@ let userIdFine = document.getElementById('userIdFine');
 let errorFine = document.getElementById('errorFine');
 let clearfineForm = document.getElementById('clearfineForm');
 
+console.log(checkfineForm);
+
 userIdFine.onchange = () => {
     errorFine.textContent = '';
 }
