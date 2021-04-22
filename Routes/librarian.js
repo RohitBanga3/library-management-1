@@ -48,10 +48,43 @@ async function addUser(req, res) {
 }
 
 router.get("/", (req, res) => {
-	checkLoginLibrarian(req, res);
-	let librarian_id = req.session.librarian_id;
-	res.render("librarianHome.ejs");
+	if(checkLoginLibrarian(req, res)){
+		let librarian_id = req.session.librarian_id;
+
+		// let query = 'SELECT author_id,name FROM author';
+
+		// db.query(query,(err,result) => {
+		// 	checkError(req,res);
+
+		// 	let author_details;
+
+		// 	author_details = result;
+
+		// 	res.render("librarianHome.ejs",{
+		// 		author_details : res
+		// 	});
+		// })
+		res.render("librarianHome.ejs");
+	}
+	
 });
+
+router.post("/addAuthor",(req,res) => {
+	if(checkLoginLibrarian(req,res)) {
+		let query = "INSERT INTO `author` SET ?";
+
+		let post = {
+			name : req.body.name
+		}
+
+		db.query(query,post,(err,result) => {
+			checkError(err,res);
+			res.json({
+				error: "Author Added Successfully"
+			})
+		})
+	}
+})
 
 router.post("/addBook", (req, res) => {
 	if (checkLoginLibrarian(req, res)) {
