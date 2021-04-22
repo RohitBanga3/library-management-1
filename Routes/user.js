@@ -104,9 +104,11 @@ router.get("/searchBook", (req, res) => {
 
 	if (criterion == "name") {
 		let query =
-			"SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE book.title LIKE '%" +
+			"SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE title LIKE '%" +
 			keyword +
-			"%' GROUP_BY book.ISBN";
+			"%' GROUP BY book.ISBN";
+
+			console.log(query);
 
 		db.query(query, (error, result) => {
 			checkError(error, res);
@@ -120,7 +122,7 @@ router.get("/searchBook", (req, res) => {
 		let query =
 			"SELECT * FROM (book INNER JOIN author ON book.author_id = author.author_id) WHERE book.ISBN LIKE '%" +
 			keyword +
-			"%' GROUP_BY book.ISBN";
+			"%' GROUP BY book.ISBN";
 
 		db.query(query, (error, result) => {
 			checkError(error, res);

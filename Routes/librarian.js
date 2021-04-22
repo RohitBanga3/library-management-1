@@ -399,6 +399,8 @@ router.get("/searchBook/", (req, res) => {
 				keyword +
 				"%' GROUP BY book.ISBN";
 
+				console.log(query);
+
 			db.query(query, (error, result) => {
 				checkError(error, res);
 				console.log(result);
