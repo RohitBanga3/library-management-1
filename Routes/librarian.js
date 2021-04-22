@@ -306,6 +306,7 @@ router.put("/changePassword", (req, res) => {
 				if (!same_old) {
 					res.json({
 						error: "old password doesn't match",
+						success: "",
 					});
 					res.end();
 				} else {
@@ -323,7 +324,8 @@ router.put("/changePassword", (req, res) => {
 							db.query(query, post, (err, result) => {
 								checkError(err, res);
 								res.json({
-									error: "password successfully changed",
+									success: "password successfully changed",
+									error: "",
 								});
 								res.end();
 							});
@@ -332,6 +334,7 @@ router.put("/changePassword", (req, res) => {
 							res.render("error.ejs", {
 								message: "internal error",
 								error: error,
+								success: "",
 							});
 						});
 				}
@@ -340,6 +343,7 @@ router.put("/changePassword", (req, res) => {
 				res.render("error.ejs", {
 					message: "internal error",
 					error: error,
+					success: "",
 				});
 			});
 	});
