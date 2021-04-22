@@ -68,20 +68,25 @@ router.get("/", (req, res) => {
 router.put("/holdBook", (req, res) => {
 	if (checkLoginUser(req, res)) {
 		let query =
-			"SELECT holder_id FROM book WHERE book_id = " +
-			req.body.book_id +
-			" AND holder_id IS NOT NULL";
+			"SELECT holder_id,book_id FROM book WHERE book_id = " +
+			req.body.ISBN +
+			" AND holder_id IS NULL";
 
 		let on_hold;
 
 		db.query(query, (error, results) => {
 			checkError(error, res);
-			on_hold = results.length > 0;
+			on_hold = results.length == 0;
 
 			if (on_hold) {
-				res.redirect("/user/");
+				res.json({
+					error: "book not available for hold"
+				});
+				res.end();
 			} else {
-				query = "UPDATE book SET ? WHERE book_id = " + req.body.book_id;
+				console.log(results);
+				let book_id = results[0].book_id;
+				query = "UPDATE book SET ? WHERE book_id = " + book_id;
 				let post = {
 					holder_id: req.session.user_id,
 					hold_date: new Date(),
@@ -90,7 +95,10 @@ router.put("/holdBook", (req, res) => {
 
 				db.query(query, post, (err, result) => {
 					checkError(err, res);
-					res.redirect("/user/");
+					res.json({
+						error:"book is successfully on hold"
+					})
+					res.end();
 				});
 			}
 		});

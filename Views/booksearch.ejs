@@ -96,10 +96,10 @@
                                 <p>Status: <%=locals.books[i].status%></p>
                             </div>
                             <%if(locals.books[i].status != 'on hold' && locals.librarian != true) {%>
-                            <form onsubmit = "submitHold('<%=locals.books[i].book_id%>')">
+                            <form onsubmit = "return submitHold('<%=locals.books[i].ISBN%>')">
                                 <input
                                     type="hidden"
-                                    value="<%=locals.books[i].book_id%>"
+                                    value="<%=locals.books[i].ISBN%>"
                                     name="book_id"
                                 />
                                 <button class="btn btn-primary" type="submit"

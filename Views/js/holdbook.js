@@ -1,13 +1,12 @@
 
 
-submitHold = (book_id) => {
+submitHold = (ISBN) => {
     let body = {
-        book_id : book_id
+        ISBN : ISBN
     }
 
     let url = '/user/holdBook';
 
-    console.log(url);
 
     fetch(url,{
         method : "PUT",
@@ -19,12 +18,15 @@ submitHold = (book_id) => {
     })
     .then((response) => {
         //console.log(response);
-        if(response.redirected){
-            window.location.href = response.url;
-        }
+        return response.json();
         //console.log(response);
+    })
+    .then((response) => {
+        alert(response.error);
     })
     .catch((error) => {
         console.log(error);
     })
+
+    return false;
 }
