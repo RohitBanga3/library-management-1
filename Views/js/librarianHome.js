@@ -12,8 +12,8 @@ let addUserSection = document.getElementById("addUserSection");
 let addAuthorSection = document.getElementById("addAuthorSection");
 let fineSection = document.getElementById("fineSection");
 let fineHead = document.getElementById("fineHead");
-let authorHead = document.getElementById('authorHead');
-let authorSection = document.getElementById('authorSection')
+let authorHead = document.getElementById("authorHead");
+let authorSection = document.getElementById("authorSection");
 
 issueHead.onclick = () => {
 	issueHead.classList.remove("passivebackground");
@@ -45,8 +45,8 @@ issueHead.onclick = () => {
 	fineSection.classList.remove("d-flex");
 
 	authorHead.classList.add("passivebackground");
-	authorSection.classList.add('d-none');
-	authorSection.classList.remove('d-flex');
+	authorSection.classList.add("d-none");
+	authorSection.classList.remove("d-flex");
 };
 
 returnHead.onclick = () => {
@@ -79,8 +79,8 @@ returnHead.onclick = () => {
 	fineSection.classList.remove("d-flex");
 
 	authorHead.classList.add("passivebackground");
-	authorSection.classList.add('d-none');
-	authorSection.classList.remove('d-flex');
+	authorSection.classList.add("d-none");
+	authorSection.classList.remove("d-flex");
 };
 
 addBookHead.onclick = () => {
@@ -113,8 +113,8 @@ addBookHead.onclick = () => {
 	fineSection.classList.remove("d-flex");
 
 	authorHead.classList.add("passivebackground");
-	authorSection.classList.add('d-none');
-	authorSection.classList.remove('d-flex');
+	authorSection.classList.add("d-none");
+	authorSection.classList.remove("d-flex");
 };
 
 deleteBookHead.onclick = () => {
@@ -147,8 +147,8 @@ deleteBookHead.onclick = () => {
 	fineSection.classList.remove("d-flex");
 
 	authorHead.classList.add("passivebackground");
-	authorSection.classList.add('d-none');
-	authorSection.classList.remove('d-flex');
+	authorSection.classList.add("d-none");
+	authorSection.classList.remove("d-flex");
 };
 
 addUserHead.onclick = () => {
@@ -181,8 +181,8 @@ addUserHead.onclick = () => {
 	fineSection.classList.remove("d-flex");
 
 	authorHead.classList.add("passivebackground");
-	authorSection.classList.add('d-none');
-	authorSection.classList.remove('d-flex');
+	authorSection.classList.add("d-none");
+	authorSection.classList.remove("d-flex");
 };
 
 addAuthorHead.onclick = () => {
@@ -215,8 +215,8 @@ addAuthorHead.onclick = () => {
 	fineSection.classList.remove("d-flex");
 
 	authorHead.classList.add("passivebackground");
-	authorSection.classList.add('d-none');
-	authorSection.classList.remove('d-flex');
+	authorSection.classList.add("d-none");
+	authorSection.classList.remove("d-flex");
 };
 
 fineHead.onclick = () => {
@@ -249,8 +249,8 @@ fineHead.onclick = () => {
 	fineSection.classList.add("d-flex");
 
 	authorHead.classList.add("passivebackground");
-	authorSection.classList.add('d-none');
-	authorSection.classList.remove('d-flex');
+	authorSection.classList.add("d-none");
+	authorSection.classList.remove("d-flex");
 };
 
 authorHead.onclick = () => {
@@ -283,9 +283,9 @@ authorHead.onclick = () => {
 	fineSection.classList.remove("d-flex");
 
 	authorHead.classList.remove("passivebackground");
-	authorSection.classList.remove('d-none');
-	authorSection.classList.add('d-flex');
-}
+	authorSection.classList.remove("d-none");
+	authorSection.classList.add("d-flex");
+};
 
 let issueForm = document.getElementById("issueForm");
 let bookIdIssue = document.getElementById("bookIdIssue");

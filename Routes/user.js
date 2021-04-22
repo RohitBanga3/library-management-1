@@ -80,7 +80,7 @@ router.put("/holdBook", (req, res) => {
 
 			if (on_hold) {
 				res.json({
-					error: "book not available for hold"
+					error: "book not available for hold",
 				});
 				res.end();
 			} else {
@@ -96,8 +96,8 @@ router.put("/holdBook", (req, res) => {
 				db.query(query, post, (err, result) => {
 					checkError(err, res);
 					res.json({
-						error:"book is successfully on hold"
-					})
+						error: "book is successfully on hold",
+					});
 					res.end();
 				});
 			}
@@ -105,22 +105,27 @@ router.put("/holdBook", (req, res) => {
 	}
 });
 
-router.post('/postRating',(req,res) => {
-	if(checkLoginUser(req,res)){
-		let query = 'UPDATE `history` SET ? WHERE book_id = '+req.body.book_id+' AND user_id = '+req.session.user_id;
+router.post("/postRating", (req, res) => {
+	if (checkLoginUser(req, res)) {
+		let query =
+			"UPDATE `history` SET ? WHERE book_id = " +
+			req.body.book_id +
+			" AND user_id = " +
+			req.session.user_id;
 
-		let post ={
-			rating : req.body.rating
-		}
+		let post = {
+			rating: req.body.rating,
+		};
 
-		db.query(query,post,(err,result) =>{
-			checkError(err,res);
+		db.query(query, post, (err, result) => {
+			checkError(err, res);
 			res.json({
-				error: "rating updated successfully"
-			})
-		})
+				success: "rating updated successfully",
+				error: "",
+			});
+		});
 	}
-})
+});
 
 router.get("/searchBook", (req, res) => {
 	checkLoginUser(req, res);
@@ -133,7 +138,7 @@ router.get("/searchBook", (req, res) => {
 			keyword +
 			"%' GROUP BY book.ISBN";
 
-			console.log(query);
+		console.log(query);
 
 		db.query(query, (error, result) => {
 			checkError(error, res);
