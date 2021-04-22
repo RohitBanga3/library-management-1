@@ -274,8 +274,23 @@
 						</div>
 					</form>
 				</div>
-				<div id="authorSection" class="flex-column d-none">
-
+				<div id="authorSection" class="d-none">
+					<table class="table table-responsive table-hover table-bordered">
+						<thead class="thead-dark">
+							<tr>
+								<th scope="col">ID</th>
+								<th scope="col">Author Name</th>
+							</tr>
+						</thead>
+						<tbody style='background-color: #fff;'>
+							<% for(var i=0;i<author_details.length;i++){%>
+								<tr>
+									<td><%=author_details[i].author_id%></td>
+									<td><%=author_details[i].name%></td>
+								</tr>
+							<%}%>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
