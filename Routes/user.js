@@ -105,6 +105,23 @@ router.put("/holdBook", (req, res) => {
 	}
 });
 
+router.post('/postRating',(req,res) => {
+	if(checkLoginUser(req,res)){
+		let query = 'UPDATE `history` SET ? WHERE book_id = '+req.body.book_id+' AND user_id = '+req.session.user_id;
+
+		let post ={
+			rating : req.body.rating
+		}
+
+		db.query(query,post,(err,result) =>{
+			checkError(err,res);
+			res.json({
+				error: "rating updated successfully"
+			})
+		})
+	}
+})
+
 router.get("/searchBook", (req, res) => {
 	checkLoginUser(req, res);
 	var criterion = req.query.criterion;
