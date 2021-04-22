@@ -4,7 +4,7 @@ var router = require('express').Router();
 const keys = require('../config/keys');
 
 function checkLoginLibrarian(req,res){
-    //console.log(req.session,req.session.librariankey,keys.librariankey);
+    console.log(req.session,req.session.librariankey,keys.librariankey);
     if(req.session.librarianKey != keys.librariankey){
        // console.log('lokesh');
         res.render('loginlibrarian.ejs');
