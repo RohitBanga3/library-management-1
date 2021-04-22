@@ -53,12 +53,42 @@ router.get("/", (req, res) => {
 					if (result.length > 0) {
 						total_fine = result[0].total_fine;
 					}
+
+					let recomm_books;
+					let query = 'SELECT book.genre FROM (book INNER JOIN history ON book.book_id = history.book_id) WHERE history.user_id = '+req.session.user_id+' GROUP BY book.genre ORDER BY COUNT(book.genre) DESC';
+
+					db.query(query,(error,result) => {
+						checkError(error,res);
+						let query;
+						if(result.length == 0){
+							query = 'SELECT * FROM book WHERE EXISTS (SELECT history.book_id FROM history GROUP BY history.book_id ORDER BY AVG(history.rating) DESC LIMIT 10)'
+							db.query(query,(err,result) => {
+								checkError(err,res);
+								recomm_books = result;
+							})
+						}
+						else{
+							query = 'SELECT * FROM book WHERE genre IN ('+result.join()+')';
+						}
+						db.query(query,(err,result) => {
+							checkError(err,res);
+							recomm_books = result;
+							let query = 'SELECT * FROM (book INNER JOIN history ON book.book_id = history.book_id) WHERE history.user_id = '+req.session.user_id;
+							db.query(query,(err,result) => {
+								checkError(err,res);
+								let history_books = result;
+								res.render("userHome.ejs", {
+									issuedBooks: issuedBooks,
+									holdBooks: holdBooks,
+									total_fine: total_fine,
+									recomm_books : recomm_books,
+									history_books : result
+								});
+							})
+						})
+					})
+
 					//console.log(holdBooks);
-					res.render("userHome.ejs", {
-						issuedBooks: issuedBooks,
-						holdBooks: holdBooks,
-						total_fine: total_fine,
-					});
 				});
 			});
 		});
